@@ -335,6 +335,7 @@ Overtime.prototype._update = function()
 
  // Update the time.
  this.t -= elapsed;
+ if(this.t < 0) { this.t = 0; }
  this.updateEvent.time = this.t;
  this.dispatchEvent(this.updateEvent);
 
