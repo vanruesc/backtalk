@@ -25,7 +25,6 @@
     "node": ">= 0.8.0"
   },
   "dependencies": {
-    "@zayesh/eventdispatcher": "x.x.x",
     "overtime": "x.x.x"
   },
   "devDependencies": {
