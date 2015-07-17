@@ -1,0 +1,40 @@
+{
+  "name": "backtalk",
+  "description": "The front end of the FHB lecture evaluation app project.",
+  "keywords": ["campus", "lecture", "evaluation", "eval", "fhb", "university", "brandenburg"],
+  "version": "0.0.0",
+  "private": true,
+  "homepage": "https://github.com/vanruesc/backtalk",
+  "author": {
+    "name": "Raoul van Rueschen",
+    "email": "vanruesc@fh-brandenburg.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vanruesc/backtalk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vanruesc/backtalk/issues"
+  },
+  "license": "Zlib",
+  "main": "src/backtalk",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "dependencies": {
+    "@zayesh/eventdispatcher": "x.x.x",
+    "overtime": "x.x.x"
+  },
+  "devDependencies": {
+    "grunt": "0.4.x",
+    "grunt-browserify": "3.x.x",
+    "grunt-contrib-clean": "0.x.x",
+    "grunt-contrib-jasmine": "0.x.x",
+    "grunt-contrib-jshint": "0.11.x",
+    "grunt-contrib-uglify": "0.9.x",
+    "grunt-contrib-watch": "0.6.x"
+  }
+}
