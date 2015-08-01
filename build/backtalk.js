@@ -1,5 +1,5 @@
 /**
- * backtalk v0.0.0 build 21.07.2015
+ * backtalk v0.0.1 build 01.08.2015
  * https://github.com/vanruesc/backtalk
  * Copyright 2015 Raoul van Rueschen, Zlib
  */
@@ -471,12 +471,123 @@ module.exports = Overtime;
 },{"@zayesh/eventdispatcher":1}],3:[function(require,module,exports){
 "use strict";
 
-var Overtime = require("overtime"),
- overtime, container, minutes, seconds,
- votes, uid, xhr, timeout = 5000, voteCount = 0;
+/**
+ * A compilation of static functions.
+ * This system uses Overtime to display a
+ * time limit on the evaluation page.
+ *
+ * @class Backtalk
+ * @static
+ */
+
+var Overtime = require("overtime");
+
+/**
+ * The Overtime instance.
+ *
+ * @property overtime
+ * @type Overtime
+ * @private
+ * @static
+ */
+
+var overtime;
+
+/**
+ * The main DOM container.
+ *
+ * @property container
+ * @type HTMLDivElement
+ * @private
+ * @static
+ */
+
+var container;
+
+/**
+ * The DOM container for displaying the minutes.
+ *
+ * @property minutes
+ * @type HTMLInputElement
+ * @private
+ * @static
+ */
+
+var minutes;
+
+/**
+ * The DOM container for displaying the seconds.
+ *
+ * @property seconds
+ * @type HTMLInputElement
+ * @private
+ * @static
+ */
+
+var seconds;
+
+/**
+ * The interval id.
+ *
+ * @property intervalId
+ * @type Number
+ * @private
+ * @static
+ */
+
+var intervalId;
+
+/**
+ * The DOM container for displaying the votes.
+ *
+ * @property votes
+ * @type HTMLSpanElement
+ * @private
+ * @static
+ */
+
+var votes;
+
+/**
+ * The ajax object.
+ *
+ * @property xhr
+ * @type XMLHttpRequest
+ * @private
+ * @static
+ */
+
+var xhr;
+
+/**
+ * The request timeout in ms.
+ *
+ * @property timeout
+ * @type Number
+ * @default 5000
+ * @private
+ * @static
+ */
+
+var timeout = 5000;
+
+/**
+ * The current vote count.
+ *
+ * @property voteCount
+ * @type Number
+ * @private
+ * @static
+ */
+
+var voteCount;
 
 /**
  * Dynamically resize the canvas.
+ *
+ * @method resize
+ * @private
+ * @static
  */
 
 function resize()
@@ -489,6 +600,10 @@ function resize()
 
 /**
  * Sets the time based on the values in the input fields.
+ *
+ * @method copyTime
+ * @private
+ * @static
  */
 
 function copyTime()
@@ -530,6 +645,11 @@ function copyTime()
 
 /**
  * Displays the time as digits.
+ *
+ * @method displayTime
+ * @private
+ * @static
+ * @param {Object} event - The event.
  */
 
 function displayTime(event)
@@ -546,6 +666,10 @@ function displayTime(event)
 
 /**
  * Adds event listeners to the time controls number inputs.
+ *
+ * @method enableTimeControls
+ * @private
+ * @static
  */
 
 function enableTimeControls()
@@ -557,6 +681,9 @@ function enableTimeControls()
 /**
  * Removes event listeners from the time controls number inputs.
  *
+ * @method disableTimeControls
+ * @private
+ * @static
  * @return {boolean} Whether the time controls were editable before they were disabled.
  */
 
@@ -575,6 +702,10 @@ function disableTimeControls()
 
 /**
  * Handle xhr responses.
+ *
+ * @method handleResponse
+ * @private
+ * @static
  */
 
 function handleResponse()
@@ -586,31 +717,49 @@ function handleResponse()
   try
   {
    voteCount = parseInt(this.responseText);
+  }
+  catch(e)
+  {
+   voteCount = Number.NaN;
+  }
 
-   if(typeof voteCount === "number" && !isNaN(voteCount) && voteCount !== oldVoteCount)
+  if(typeof voteCount === "number" && !isNaN(voteCount))
+  {
+   if(voteCount !== oldVoteCount)
    {
-    // Fancy animation goes here.
+    // Fancy update animation goes here.
     votes.innerHTML = voteCount;
+    oldVoteCount = voteCount;
    }
   }
-  catch(e) {}
+  else
+  {
+   clearInterval(intervalId);
+  }
  }
 }
 
 /**
  * Request the current vote count.
+ *
+ * @method requestVoteCount
+ * @private
+ * @static
  */
 
 function requestVoteCount()
 {
- // window.location.href.replace(new RegExp("evaluation"), "evaluation/vote-count")
- xhr.open("GET", "/evaluation/vote-count" + uid.value, true);
+ xhr.open("GET", window.location.href.replace(new RegExp("evaluation/"), "evaluation/vote-count?uid="), true);
  xhr.timeout = timeout - 1000;
  xhr.send();
 }
 
 /**
  * The Setup.
+ *
+ * @method init
+ * @private
+ * @static
  */
 
 window.addEventListener("load", function init()
@@ -621,15 +770,22 @@ window.addEventListener("load", function init()
  seconds = document.getElementById("seconds");
  minutes = document.getElementById("minutes");
  votes = document.getElementById("votes");
- uid = document.getElementById("uid");
 
  // Make sure that all elements are present.
- if(container && minutes && seconds && votes && uid)
+ if(container && minutes && seconds && votes)
  {
   // Adjust the size of the canvas and add it to the page.
   resize();
   window.addEventListener("resize", resize);
   container.appendChild(overtime.canvas);
+
+  // Reset time to 30 minutes.
+  overtime.timeMeasure = Overtime.TimeMeasure.MINUTES;
+  overtime.time = 30;
+  overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
+  overtime.shortenBy(1);
+  overtime.rewind();
+  displayTime(overtime);
 
   // Update the time in the two input fields.
   overtime.addEventListener("update", displayTime);
@@ -668,7 +824,7 @@ window.addEventListener("load", function init()
    xhr = new XMLHttpRequest();
    xhr.addEventListener("readystatechange", handleResponse);
    xhr.addEventListener("timeout", function() {});
-   setInterval(requestVoteCount, timeout);
+   intervalId = setInterval(requestVoteCount, timeout);
   }
  }
 

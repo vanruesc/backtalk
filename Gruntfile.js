@@ -66,6 +66,19 @@ module.exports = function(grunt)
       test: ["<%= browserify.test.dest %>"]
     },
 
+    yuidoc: {
+      compile: {
+        name: "<%= pkg.name %>",
+        description: "<%= pkg.description %>",
+        version: "<%= pkg.version %>",
+        url: "<%= pkg.homepage %>",
+        options: {
+          paths: ["./src/"],
+          outdir: "docs"
+        }
+      }
+    },
+
     watch: {
       gruntfile: {
         files: "<%= jshint.gruntfile.src %>",
@@ -89,6 +102,7 @@ module.exports = function(grunt)
   grunt.loadNpmTasks("grunt-contrib-jshint");
   grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks("grunt-contrib-watch");
+  grunt.loadNpmTasks("grunt-contrib-yuidoc");
 
   // Task definitions.
   grunt.registerTask("default", ["clean:test", "jshint", "browserify:test", "jasmine", "browserify:build", "uglify", "clean:test"]);
