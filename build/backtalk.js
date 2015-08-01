@@ -1,5 +1,5 @@
 /**
- * backtalk v0.0.0 build 18.07.2015
+ * backtalk v0.0.0 build 01.08.2015
  * https://github.com/vanruesc/backtalk
  * Copyright 2015 Raoul van Rueschen, Zlib
  */
@@ -101,19 +101,21 @@ module.exports = EventDispatcher;
 },{}],2:[function(require,module,exports){
 "use strict";
 
+module.exports = Overtime;
+
 var EventDispatcher = require("@zayesh/eventdispatcher");
 
 /**
- * Overtime.
  * A time limit visualization library.
  *
+ * @class Overtime
  * @constructor
- * @param {Object} options - The settings.
- * @param {number} [options.time] - The time limit.
- * @param {number} [options.canvas] - The canvas to use. A new one will be created if none is supplied.
- * @param {boolean} [options.clearCanvas] - Whether the canvas should be cleared before rendering. Default is true.
- * @param {Array} [options.size] - The size of the canvas as an array: [width, height].
- * @param {Overtime.TimeMeasure} [options.timeMeasure] - The time measure of the supplied time limit. Defaults to seconds.
+ * @param {Object} [options] - The settings.
+ * @param {Number} [options.time] - The time limit.
+ * @param {Number} [options.canvas] - The canvas to use. A new one will be created if none is supplied.
+ * @param {Boolean} [options.clearCanvas=true] - Whether the canvas should be cleared before rendering.
+ * @param {Array} [options.size] - The size of the canvas.
+ * @param {Overtime.TimeMeasure} [options.timeMeasure=Overtime.TimeMeasure.SECONDS] - The time measure of the supplied time limit.
  */
 
 function Overtime(options)
@@ -122,26 +124,160 @@ function Overtime(options)
 
  EventDispatcher.call(this);
 
+ /**
+  * PI * 2.
+  *
+  * @property TWO_PI
+  * @type Number
+  * @private
+  * @final
+  */
+
  this.TWO_PI = Math.PI * 2.0;
+
+ /**
+  * PI / 2.
+  *
+  * @property HALF_PI
+  * @type Number
+  * @private
+  * @final
+  */
+
  this.HALF_PI = Math.PI * 0.5;
 
- this.clear = true;
+ /**
+  * Clear canvas flag.
+  *
+  * @property clearCanvas
+  * @type Boolean
+  */
+
+ this.clearCanvas = true;
+
+ /**
+  * Animation id of the currently requested frame.
+  *
+  * @property animId
+  * @type Number
+  * @private
+  */
+
  this.animId = 0;
+
+ /**
+  * Used for time-based rendering.
+  *
+  * @property now
+  * @type Number
+  * @private
+  */
+
  this.now = Date.now();
+
+ /**
+  * Used for time-based rendering.
+  *
+  * @property then
+  * @type Number
+  * @private
+  */
+
  this.then = this.now;
+
+ /**
+  * The rendering context.
+  *
+  * @property ctx
+  * @type CanvasRenderingContext2D
+  * @private
+  */
+
  this.ctx = null;
+
+ // Set the initial canvas.
  this.canvas = document.createElement("canvas");
 
+ /**
+  * the start angle.
+  *
+  * @property startAngle
+  * @type Number
+  * @private
+  */
+
  this.startAngle = -this.HALF_PI;
- this.threshold = 0.023; // Chrome hack.
+
+ /**
+  * A float threshold for the chrome rendering hack.
+  *
+  * @property threshold
+  * @type Number
+  * @private
+  */
+
+ this.threshold = 0.023;
+
+ /**
+  * Radians of the full circle plus the start angle.
+  *
+  * @property fullCircle
+  * @type Number
+  * @private
+  */
+
  this.fullCircle = this.startAngle + this.TWO_PI;
+
+ /**
+  * Colour of the progressing circle.
+  *
+  * @property primaryStrokeStyle
+  * @type String
+  * @default rgba(255, 100, 0, 0.9)
+  */
+
  this.primaryStrokeStyle = "rgba(255, 100, 0, 0.9)";
+
+ /**
+  * Colour of the empty circle.
+  *
+  * @property secondaryStrokeStyle
+  * @type String
+  * @default rgba(0, 0, 0, 0.1)
+  */
+
  this.secondaryStrokeStyle = "rgba(0, 0, 0, 0.1)";
+
+ /**
+  * Returns the remaining time.
+  *
+  * @event update
+  * @param {Number} time - The remaining time.
+  */
+
  this.updateEvent = {type: "update", time: 0};
 
+ /**
+  * The currently set time measure.
+  *
+  * @property tm
+  * @type Overtime.TimeMeasure
+  * @private
+  */
+
  this.tm = Overtime.TimeMeasure.MILLISECONDS;
+
+ /**
+  * The remaining time in milliseconds.
+  *
+  * @property t
+  * @type Number
+  * @private
+  */
+
  this.t = 1;
 
+ // Overwrite the defaults.
  if(options !== undefined)
  {
   if(options.timeMeasure > 0) { this.tm = options.timeMeasure; }
@@ -150,7 +286,17 @@ function Overtime(options)
   this.size = options.size;
  }
 
+ // Update the time.
  this.t *= this.tm;
+
+ /**
+  * The total time.
+  *
+  * @property T
+  * @type Number
+  * @private
+  */
+
  this.T = this.t;
 
  // Try to recover time values from a previous session.
@@ -166,8 +312,14 @@ function Overtime(options)
   catch(e) { /* Swallow. */ }
  }
 
- // Store the time values for the next session.
- window.addEventListener("unload", function()
+ /**
+  * Stores the time values for the next session.
+  *
+  * @method persist
+  * @private
+  */
+
+ window.addEventListener("unload", function persist()
  {
   localStorage.setItem("overtime", JSON.stringify({
    tm: self.tm,
@@ -177,7 +329,9 @@ function Overtime(options)
  });
 
  /**
-  * Bind the correct context to the internal update function.
+  * The update function.
+  *
+  * @method update
   */
 
  this.update = function() { self._update(); };
@@ -187,18 +341,10 @@ Overtime.prototype = Object.create(EventDispatcher.prototype);
 Overtime.prototype.constructor = Overtime;
 
 /**
- * Getter for the internal canvas.
- */
-
-Object.defineProperty(Overtime.prototype, "clearCanvas", {
- get: function() { return this.clear; },
- set: function(c) { this.clear = c; }
-});
-
-/**
- * Getter and Setter for the internal canvas.
- * 
- * @param {canvas} c - The new canvas to draw on.
+ * The internal canvas.
+ *
+ * @property canvas
+ * @type HTMLCanvasElement
  */
 
 Object.defineProperty(Overtime.prototype, "canvas", {
@@ -216,9 +362,10 @@ Object.defineProperty(Overtime.prototype, "canvas", {
 });
 
 /**
- * Getter and Setter for the time.
- * 
- * @param {number} t - The new time. Will be translated to the current time measure.
+ * The time. When set, the given value will be translated to the current time measure.
+ *
+ * @property time
+ * @type Number
  */
 
 Object.defineProperty(Overtime.prototype, "time", {
@@ -236,10 +383,11 @@ Object.defineProperty(Overtime.prototype, "time", {
 });
 
 /**
- * Getter and Setter for the time measure.
+ * The current time measure.
  * The current time will not be affected by this in any way.
- * 
- * @param {Overtime.TimeMeasure} tm - The new time measure.
+ *
+ * @property timeMeasure
+ * @type Overtime.TimeMeasure
  */
 
 Object.defineProperty(Overtime.prototype, "timeMeasure", {
@@ -254,9 +402,12 @@ Object.defineProperty(Overtime.prototype, "timeMeasure", {
 });
 
 /**
- * Getter and Setter for the size of the internal canvas.
- * 
- * @param {Array} s - The new size in the form of [width, height].
+ * The size of the canvas.
+ *
+ * @property size
+ * @type Number
+ * @example
+ *  [width, height]
  */
 
 Object.defineProperty(Overtime.prototype, "size", {
@@ -281,6 +432,9 @@ Object.defineProperty(Overtime.prototype, "size", {
 
 /**
  * Renders the time progress on the canvas.
+ *
+ * @method _render
+ * @private
  */
 
 Overtime.prototype._render = function()
@@ -293,7 +447,7 @@ Overtime.prototype._render = function()
   endAngle,
   tooThin; // Chrome hack.
 
- if(this.clear) { ctx.clearRect(0, 0, w, h); }
+ if(this.clearCanvas) { ctx.clearRect(0, 0, w, h); }
 
  // Don't bleed over the edge.
  radius -= ctx.lineWidth;
@@ -322,6 +476,9 @@ Overtime.prototype._render = function()
 /**
  * Steps the system forward.
  * This is the main loop.
+ *
+ * @method _update
+ * @private
  */
 
 Overtime.prototype._update = function()
@@ -355,6 +512,8 @@ Overtime.prototype._update = function()
 
 /**
  * Stops the rendering cycle. Does nothing else besides that.
+ *
+ * @method stop
  */
 
 Overtime.prototype.stop = function()
@@ -369,6 +528,8 @@ Overtime.prototype.stop = function()
 /**
  * Tries to start the rendering cycle if it isn't
  * running. Otherwise it restarts it.
+ *
+ * @method start
  */
 
 Overtime.prototype.start = function()
@@ -381,6 +542,8 @@ Overtime.prototype.start = function()
 
 /**
  * Sets the time back to its original length.
+ *
+ * @method rewind
  */
 
 Overtime.prototype.rewind = function()
@@ -394,12 +557,13 @@ Overtime.prototype.rewind = function()
  * Sets the time back by the given value.
  * The time will not go back beyond the initial length.
  *
- * @param {number} t - The time by which to rewind. Interpreted according to the current time measure. A negative value corresponds to fast-forwarding.
+ * @method rewindBy
+ * @param {Number} t - The time by which to rewind. Interpreted according to the current time measure. A negative value corresponds to fast-forwarding.
  */
 
 Overtime.prototype.rewindBy = function(t)
 {
- if(typeof t === "number" && !isNaN(t))
+ if(typeof t === "number" && !isNaN(t) && t !== 0)
  {
   this.stop();
   this.t += t * this.tm;
@@ -411,7 +575,8 @@ Overtime.prototype.rewindBy = function(t)
 /**
  * Goes ahead in time by a given value.
  *
- * @param {number} t - The time value by which to rewind. Will be interpreted according to the current time measure. A negative value corresponds to rewinding.
+ * @method advanceBy
+ * @param {Number} t - The time value by which to rewind. Will be interpreted according to the current time measure. A negative value corresponds to rewinding.
  */
 
 Overtime.prototype.advanceBy = function(t)
@@ -425,19 +590,19 @@ Overtime.prototype.advanceBy = function(t)
 /**
  * Adds time.
  *
- * @param {number} t - The time value to add. Will be interpreted according to the current time measure. A negative value corresponds to shortening.
+ * @method prolongBy
+ * @param {Number} t - The time value to add. Will be interpreted according to the current time measure. A negative value corresponds to shortening.
  */
 
 Overtime.prototype.prolongBy = function(t)
 {
- if(typeof t === "number" && !isNaN(t))
+ if(typeof t === "number" && !isNaN(t) && t !== 0)
  {
   this.stop();
   t *= this.tm;
-  this.stop();
   this.t += t;
   this.T += t;
-  if(this.T <= 0) { this.T = this.t = 1; }
+  if(this.T < 0) { this.T = this.t = 0; }
   this._render();
  }
 };
@@ -445,7 +610,8 @@ Overtime.prototype.prolongBy = function(t)
 /**
  * Reduces the total duration of the countdown.
  *
- * @param {number} t - The time value to subtract. Will be interpreted according to the current time measure. A negative value corresponds to prolonging.
+ * @method shortenBy
+ * @param {Number} t - The time value to subtract. Will be interpreted according to the current time measure. A negative value corresponds to prolonging.
  */
 
 Overtime.prototype.shortenBy = function(t)
@@ -457,7 +623,12 @@ Overtime.prototype.shortenBy = function(t)
 };
 
 /**
- * Static enumeration of time measure constants.
+ * Enumeration of time measure constants.
+ *
+ * @property TimeMeasure
+ * @type Object
+ * @static
+ * @final
  */
 
 Overtime.TimeMeasure = Object.freeze({
@@ -467,17 +638,126 @@ Overtime.TimeMeasure = Object.freeze({
  HOURS: 3600000
 });
 
-module.exports = Overtime;
-
 },{"@zayesh/eventdispatcher":1}],3:[function(require,module,exports){
 "use strict";
 
-var Overtime = require("overtime"),
- overtime = new Overtime(),
- container, hours, minutes, seconds;
+/**
+ * A compilation of static functions.
+ * This system uses Overtime to display a
+ * time limit on the evaluation page.
+ *
+ * @class Backtalk
+ * @static
+ */
+
+var Overtime = require("overtime");
+
+/**
+ * The Overtime instance.
+ *
+ * @property overtime
+ * @type Overtime
+ * @private
+ * @static
+ */
+
+var overtime;
+
+/**
+ * The main DOM container.
+ *
+ * @property container
+ * @type HTMLDivElement
+ * @private
+ * @static
+ */
+
+var container;
+
+/**
+ * The DOM container for displaying the minutes.
+ *
+ * @property minutes
+ * @type HTMLInputElement
+ * @private
+ * @static
+ */
+
+var minutes;
+
+/**
+ * The DOM container for displaying the seconds.
+ *
+ * @property seconds
+ * @type HTMLInputElement
+ * @private
+ * @static
+ */
+
+var seconds;
+
+/**
+ * The interval id.
+ *
+ * @property intervalId
+ * @type Number
+ * @private
+ * @static
+ */
+
+var intervalId;
+
+/**
+ * The DOM container for displaying the votes.
+ *
+ * @property votes
+ * @type HTMLSpanElement
+ * @private
+ * @static
+ */
+
+var votes;
+
+/**
+ * The ajax object.
+ *
+ * @property xhr
+ * @type XMLHttpRequest
+ * @private
+ * @static
+ */
+
+var xhr;
+
+/**
+ * The request timeout in ms.
+ *
+ * @property timeout
+ * @type Number
+ * @default 5000
+ * @private
+ * @static
+ */
+
+var timeout = 5000;
+
+/**
+ * The current vote count.
+ *
+ * @property voteCount
+ * @type Number
+ * @private
+ * @static
+ */
+
+var voteCount;
 
 /**
  * Dynamically resize the canvas.
+ *
+ * @method resize
+ * @private
+ * @static
  */
 
 function resize()
@@ -490,127 +770,233 @@ function resize()
 
 /**
  * Sets the time based on the values in the input fields.
+ *
+ * @method copyTime
+ * @private
+ * @static
  */
 
 function copyTime()
 {
- overtime.timeMeasure = Overtime.TimeMeasure.HOURS;
- overtime.time = parseInt(hours.value);
- overtime.timeMeasure = Overtime.TimeMeasure.MINUTES;
- overtime.prolongBy(parseInt(minutes.value));
- overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
- overtime.prolongBy(parseInt(seconds.value));
+ var m, s;
+
+ try
+ {
+  m = parseInt(minutes.value);
+  s = parseInt(seconds.value);
+  --s;
+
+  if(m > 59) { m = 59; }
+  if(s > 59) { s = 59; }
+
+  if(s < 0 && m === 0)
+  {
+   overtime.timeMeasure = Overtime.TimeMeasure.MILLISECONDS;
+   overtime.time = 1;
+  }
+  else if(s === 0 && m === 0)
+  {
+   overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
+   overtime.time = 1;
+  }
+  else
+  {
+   overtime.timeMeasure = Overtime.TimeMeasure.MINUTES;
+   overtime.time = m;
+   overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
+   overtime.prolongBy(s + 1);
+  }
+
+  overtime.rewind();
+  displayTime(overtime);
+ }
+ catch(e) { /* Ignore invalid input. */ }
 }
 
 /**
  * Displays the time as digits.
+ *
+ * @method displayTime
+ * @private
+ * @static
+ * @param {Object} event - The event.
  */
 
 function displayTime(event)
 {
- var ms = event.time;
+ var ms = event.time, m, s;
 
- seconds.value = ((ms / 1000) % 60) | 0;
- minutes.value = ((ms / 60000) % 60) | 0;
- hours.value = ((ms / 3600000) % 60) | 0;
+ if(ms > 1) { ms += 1000; }
+
+ m = ((ms / 60000) % 60) | 0;
+ s = ((ms / 1000) % 60) | 0;
+ minutes.value = (m < 10) ? "0" + m : m;
+ seconds.value = (s < 10) ? "0" + s : s;
 }
 
 /**
  * Adds event listeners to the time controls number inputs.
+ *
+ * @method enableTimeControls
+ * @private
+ * @static
  */
 
 function enableTimeControls()
 {
- hours.addEventListener("change", copyTime);
- minutes.addEventListener("change", copyTime);
- seconds.addEventListener("change", copyTime);
+ minutes.disabled = false;
+ seconds.disabled = false;
 }
 
 /**
  * Removes event listeners from the time controls number inputs.
+ *
+ * @method disableTimeControls
+ * @private
+ * @static
+ * @return {boolean} Whether the time controls were editable before they were disabled.
  */
 
 function disableTimeControls()
 {
- hours.removeEventListener("change", copyTime);
- minutes.removeEventListener("change", copyTime);
- seconds.removeEventListener("change", copyTime);
+ var enabled = !minutes.disabled && !seconds.disabled;
+
+ if(enabled)
+ {
+  minutes.disabled = true;
+  seconds.disabled = true;
+ }
+
+ return enabled;
 }
 
 /**
- * Initial setup.
+ * Handle xhr responses.
+ *
+ * @method handleResponse
+ * @private
+ * @static
+ */
+
+function handleResponse()
+{
+ var oldVoteCount = voteCount;
+
+ if(this.readyState === 4)
+ {
+  try
+  {
+   voteCount = parseInt(this.responseText);
+  }
+  catch(e)
+  {
+   voteCount = Number.NaN;
+  }
+
+  if(typeof voteCount === "number" && !isNaN(voteCount))
+  {
+   if(voteCount !== oldVoteCount)
+   {
+    // Fancy update animation goes here.
+    votes.innerHTML = voteCount;
+    oldVoteCount = voteCount;
+   }
+  }
+  else
+  {
+   clearInterval(intervalId);
+  }
+ }
+}
+
+/**
+ * Request the current vote count.
+ *
+ * @method requestVoteCount
+ * @private
+ * @static
+ */
+
+function requestVoteCount()
+{
+ xhr.open("GET", window.location.href.replace(new RegExp("evaluation/"), "evaluation/vote-count?uid="), true);
+ xhr.timeout = timeout - 1000;
+ xhr.send();
+}
+
+/**
+ * The Setup.
+ *
+ * @method init
+ * @private
+ * @static
  */
 
 window.addEventListener("load", function init()
 {
- //var fullscreen = false;
+ overtime = new Overtime();
 
  container = document.getElementById("overtime");
- hours = document.getElementById("hours");
- minutes = document.getElementById("minutes");
  seconds = document.getElementById("seconds");
+ minutes = document.getElementById("minutes");
+ votes = document.getElementById("votes");
 
- container.appendChild(overtime.canvas);
-
- resize();
- window.addEventListener("resize", resize);
-
- overtime.addEventListener("elapsed", function()
+ // Make sure that all elements are present.
+ if(container && minutes && seconds && votes)
  {
-  //alert("Die Zeit ist um!");
- });
-
- overtime.addEventListener("update", displayTime);
-
- document.getElementById("stop").addEventListener("click", function()
- {
-  overtime.stop();
-  enableTimeControls();
- });
-
- document.getElementById("start").addEventListener("click", function()
- {
-  disableTimeControls();
-  overtime.start();
- });
-
- document.getElementById("rewind").addEventListener("click", function()
- {
-  overtime.rewind();
-  displayTime({time: overtime.T});
-  enableTimeControls();
- });
-
- enableTimeControls();
-
-/*
- overtime.canvas.addEventListener("click", function()
- {
-  if(!fullscreen)
-  {
-   container.style.position = "absolute";
-   container.style.zIndex = 100;
-   container.style.top = 0;
-   container.style.left = 0;
-   container.style.right = 0;
-   container.style.bottom = 0;
-   container.style.backgroundColor = "white";
-   fullscreen = true;
-  }
-  else
-  {
-   container.style.position = "relative";
-   container.style.top = "auto";
-   container.style.left = "auto";
-   container.style.right = "auto";
-   container.style.bottom = "auto";
-   container.style.backgroundColor = "transparent";
-   fullscreen = false;
-  }
-
+  // Adjust the size of the canvas and add it to the page.
   resize();
- });
-*/
+  window.addEventListener("resize", resize);
+  container.appendChild(overtime.canvas);
+
+  // Reset time to 30 minutes.
+  overtime.timeMeasure = Overtime.TimeMeasure.MINUTES;
+  overtime.time = 30;
+  overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
+  overtime.shortenBy(1);
+  overtime.rewind();
+  displayTime(overtime);
+
+  // Update the time in the two input fields.
+  overtime.addEventListener("update", displayTime);
+
+  overtime.addEventListener("elapsed", function()
+  {
+   enableTimeControls();
+
+   // Implement fancy finish effect here maybe.
+   window.alert("Die Zeit ist um!");
+  });
+
+  document.getElementById("stop").addEventListener("click", function()
+  {
+   overtime.stop();
+   enableTimeControls();
+  });
+
+  document.getElementById("start").addEventListener("click", function()
+  {
+   if(disableTimeControls())
+   {
+    copyTime();
+   }
+
+   overtime.start();
+  });
+
+  // Show the current time (persists over multiple sessions).
+  displayTime(overtime);
+  enableTimeControls();
+
+  // Try to request the current vote count.
+  if(XMLHttpRequest !== undefined)
+  {
+   xhr = new XMLHttpRequest();
+   xhr.addEventListener("readystatechange", handleResponse);
+   xhr.addEventListener("timeout", function() {});
+   intervalId = setInterval(requestVoteCount, timeout);
+  }
+ }
 
  // Clean up.
  window.removeEventListener("load", init);

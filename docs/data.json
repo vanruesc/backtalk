@@ -1,0 +1,246 @@
+{
+    "project": {
+        "name": "backtalk",
+        "description": "The front end of the FHB lecture evaluation app project.",
+        "version": "0.0.1",
+        "url": "https://github.com/vanruesc/backtalk"
+    },
+    "files": {
+        "src\\backtalk.js": {
+            "name": "src\\backtalk.js",
+            "modules": {},
+            "classes": {
+                "Backtalk": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "Backtalk": {
+            "name": "Backtalk",
+            "shortname": "Backtalk",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\backtalk.js",
+            "line": 3,
+            "description": "A compilation of static functions.\nThis system uses Overtime to display a\ntime limit on the evaluation page.",
+            "static": 1
+        }
+    },
+    "classitems": [
+        {
+            "file": "src\\backtalk.js",
+            "line": 14,
+            "description": "The Overtime instance.",
+            "itemtype": "property",
+            "name": "overtime",
+            "type": "Overtime",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 25,
+            "description": "The main DOM container.",
+            "itemtype": "property",
+            "name": "container",
+            "type": "HTMLDivElement",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 36,
+            "description": "The DOM container for displaying the minutes.",
+            "itemtype": "property",
+            "name": "minutes",
+            "type": "HTMLInputElement",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 47,
+            "description": "The DOM container for displaying the seconds.",
+            "itemtype": "property",
+            "name": "seconds",
+            "type": "HTMLInputElement",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 58,
+            "description": "The interval id.",
+            "itemtype": "property",
+            "name": "intervalId",
+            "type": "Number",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 69,
+            "description": "The DOM container for displaying the votes.",
+            "itemtype": "property",
+            "name": "votes",
+            "type": "HTMLSpanElement",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 80,
+            "description": "The ajax object.",
+            "itemtype": "property",
+            "name": "xhr",
+            "type": "XMLHttpRequest",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 91,
+            "description": "The request timeout in ms.",
+            "itemtype": "property",
+            "name": "timeout",
+            "type": "Number",
+            "default": "5000",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 103,
+            "description": "The current vote count.",
+            "itemtype": "property",
+            "name": "voteCount",
+            "type": "Number",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 114,
+            "description": "Dynamically resize the canvas.",
+            "itemtype": "method",
+            "name": "resize",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 130,
+            "description": "Sets the time based on the values in the input fields.",
+            "itemtype": "method",
+            "name": "copyTime",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 175,
+            "description": "Displays the time as digits.",
+            "itemtype": "method",
+            "name": "displayTime",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "params": [
+                {
+                    "name": "event",
+                    "description": "- The event.",
+                    "type": "Object"
+                }
+            ],
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 196,
+            "description": "Adds event listeners to the time controls number inputs.",
+            "itemtype": "method",
+            "name": "enableTimeControls",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 210,
+            "description": "Removes event listeners from the time controls number inputs.",
+            "itemtype": "method",
+            "name": "disableTimeControls",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "return": {
+                "description": "Whether the time controls were editable before they were disabled.",
+                "type": "Boolean"
+            },
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 232,
+            "description": "Handle xhr responses.",
+            "itemtype": "method",
+            "name": "handleResponse",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 271,
+            "description": "Request the current vote count.",
+            "itemtype": "method",
+            "name": "requestVoteCount",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        },
+        {
+            "file": "src\\backtalk.js",
+            "line": 286,
+            "description": "The Setup.",
+            "itemtype": "method",
+            "name": "init",
+            "access": "private",
+            "tagname": "",
+            "static": 1,
+            "class": "Backtalk"
+        }
+    ],
+    "warnings": []
+}
