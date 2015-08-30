@@ -27,7 +27,7 @@
   "license": "Zlib",
   "main": "src/backtalk",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt"
   },
   "engines": {
     "node": ">= 0.8.0"
