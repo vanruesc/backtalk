@@ -1,109 +1,176 @@
 /**
- * backtalk v0.0.0 build 01.08.2015
+ * backtalk v0.0.0 build Sep 16 2015
  * https://github.com/vanruesc/backtalk
  * Copyright 2015 Raoul van Rueschen, Zlib
  */
-
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
-
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Backtalk = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function (global){
 /**
- * Event Dispatcher.
- * A base class for adding and removing event listeners and dispatching events.
- *
- * @constructor
+ * overtime v0.1.0 build Sep 16 2015
+ * https://github.com/vanruesc/overtime
+ * Copyright 2015 Raoul van Rueschen, Zlib
  */
-
-function EventDispatcher()
-{
- this._listeners = {};
-}
-
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Overtime = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
- * Adds an event listener.
- *
- * @param {string} type - The event type.
- * @param {function} listener - The event listener.
+ * eventdispatcher v0.1.5 build Sep 16 2015
+ * https://github.com/vanruesc/eventdispatcher
+ * Copyright 2015 Raoul van Rueschen, Zlib
  */
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	global.EventDispatcher = factory();
+}(this, function () { 'use strict';
 
-EventDispatcher.prototype.addEventListener = function(type, listener)
-{
- if(this._listeners[type] === undefined)
- {
-  this._listeners[type] = [];
- }
+	/**
+	 * A base class for adding and removing event listeners and dispatching events.
+	 *
+	 * @class EventDispatcher
+	 * @constructor
+	 */
 
- if(this._listeners[type].indexOf(listener) === -1)
- {
-  this._listeners[type].push(listener);
- }
-};
+	function EventDispatcher() {
 
-/**
- * Checks if the event listener exists.
- *
- * @param {string} type - The event type.
- * @param {function} listener - The event listener.
- */
+		/**
+		 * A map of listeners.
+		 *
+		 * @property _listeners
+		 * @type Object
+		 * @private
+		 */
 
-EventDispatcher.prototype.hasEventListener = function(type, listener)
-{
- return(this._listeners[type] !== undefined && this._listeners[type].indexOf(listener) !== -1);
-};
+		this._listeners = {};
 
-/**
- * Removes an event listener.
- *
- * @param {string} type - The event type.
- * @param {function} listener - The event listener.
- */
+	}
 
-EventDispatcher.prototype.removeEventListener = function(type, listener)
-{
- var i, listeners = this._listeners,
-  listenerArray = listeners[type];
+	/**
+	 * Extends an object with the event dispatcher functionality.
+	 *
+	 * @method apply
+	 * @param {Object} object - The object.
+	 * @example
+	 *  EventDispatcher.prototype.apply(X.prototype);
+	 */
 
- if(listenerArray !== undefined)
- {
-  i = listenerArray.indexOf(listener);
+	EventDispatcher.prototype.apply = function(object) {
 
-  if(i !== -1)
-  {
-   listenerArray.splice(i, 1);
-  }
- }
-};
+		object._listeners = {};
+		object.addEventListener = EventDispatcher.prototype.addEventListener;
+		object.hasEventListener = EventDispatcher.prototype.hasEventListener;
+		object.removeEventListener = EventDispatcher.prototype.removeEventListener;
+		object.dispatchEvent = EventDispatcher.prototype.dispatchEvent;
 
-/**
- * Dispatches an event to all respective listeners.
- *
- * @param {Object} event - The event.
- */
+	};
 
-EventDispatcher.prototype.dispatchEvent = function(event)
-{
- var i, l, listeners = this._listeners,
-  listenerArray = listeners[event.type];
+	/**
+	 * Adds an event listener.
+	 *
+	 * @method addEventListener
+	 * @param {String} type - The event type.
+	 * @param {Function} listener - The event listener.
+	 */
 
- if(listenerArray !== undefined)
- {
-  event.target = this;
+	EventDispatcher.prototype.addEventListener = function(type, listener) {
 
-  for(i = 0, l = listenerArray.length; i < l; ++i)
-  {
-   listenerArray[i].call(this, event);
-  }
- }
-};
+		if(this._listeners[type] === undefined) {
 
-module.exports = EventDispatcher;
+			this._listeners[type] = [];
 
+		}
+
+		if(this._listeners[type].indexOf(listener) === -1) {
+
+			this._listeners[type].push(listener);
+
+		}
+
+	};
+
+	/**
+	 * Checks if the event listener exists.
+	 *
+	 * @method hasEventListener
+	 * @param {String} type - The event type.
+	 * @param {Function} listener - The event listener.
+	 */
+
+	EventDispatcher.prototype.hasEventListener = function(type, listener) {
+
+		return (this._listeners[type] !== undefined && this._listeners[type].indexOf(listener) !== -1);
+
+	};
+
+	/**
+	 * Removes an event listener.
+	 *
+	 * @method removeEventListener
+	 * @param {String} type - The event type.
+	 * @param {Function} listener - The event listener.
+	 */
+
+	EventDispatcher.prototype.removeEventListener = function(type, listener) {
+
+		var i, listenerArray;
+
+		listenerArray = this._listeners[type];
+
+		if(listenerArray !== undefined) {
+
+			i = listenerArray.indexOf(listener);
+
+			if(i !== -1) {
+
+				listenerArray.splice(i, 1);
+
+			}
+
+		}
+
+	};
+
+	/**
+	 * Dispatches an event to all respective listeners.
+	 *
+	 * @method dispatchEvent
+	 * @param {Object} event - The event.
+	 */
+
+	EventDispatcher.prototype.dispatchEvent = function(event) {
+
+		var i, l, listenerArray;
+
+		listenerArray = this._listeners[event.type];
+
+		if(listenerArray !== undefined) {
+
+			event.target = this;
+
+			for(i = 0, l = listenerArray.length; i < l; ++i) {
+
+				listenerArray[i].call(this, event);
+
+			}
+
+		}
+
+	};
+
+	return EventDispatcher;
+
+}));
 },{}],2:[function(require,module,exports){
 "use strict";
 
-module.exports = Overtime;
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports["default"] = Overtime;
 
-var EventDispatcher = require("@zayesh/eventdispatcher");
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _zayeshEventdispatcher = require("@zayesh/eventdispatcher");
+
+var _zayeshEventdispatcher2 = _interopRequireDefault(_zayeshEventdispatcher);
 
 /**
  * A time limit visualization library.
@@ -118,13 +185,14 @@ var EventDispatcher = require("@zayesh/eventdispatcher");
  * @param {Overtime.TimeMeasure} [options.timeMeasure=Overtime.TimeMeasure.SECONDS] - The time measure of the supplied time limit.
  */
 
-function Overtime(options)
-{
- var self = this, o;
+function Overtime(options) {
 
- EventDispatcher.call(this);
+	var self = this,
+	    o;
 
- /**
+	_zayeshEventdispatcher2["default"].call(this);
+
+	/**
   * PI * 2.
   *
   * @property TWO_PI
@@ -133,9 +201,9 @@ function Overtime(options)
   * @final
   */
 
- this.TWO_PI = Math.PI * 2.0;
+	this.TWO_PI = Math.PI * 2.0;
 
- /**
+	/**
   * PI / 2.
   *
   * @property HALF_PI
@@ -144,18 +212,18 @@ function Overtime(options)
   * @final
   */
 
- this.HALF_PI = Math.PI * 0.5;
+	this.HALF_PI = Math.PI * 0.5;
 
- /**
+	/**
   * Clear canvas flag.
   *
   * @property clearCanvas
   * @type Boolean
   */
 
- this.clearCanvas = true;
+	this.clearCanvas = true;
 
- /**
+	/**
   * Animation id of the currently requested frame.
   *
   * @property animId
@@ -163,9 +231,9 @@ function Overtime(options)
   * @private
   */
 
- this.animId = 0;
+	this.animId = 0;
 
- /**
+	/**
   * Used for time-based rendering.
   *
   * @property now
@@ -173,9 +241,9 @@ function Overtime(options)
   * @private
   */
 
- this.now = Date.now();
+	this.now = Date.now();
 
- /**
+	/**
   * Used for time-based rendering.
   *
   * @property then
@@ -183,9 +251,9 @@ function Overtime(options)
   * @private
   */
 
- this.then = this.now;
+	this.then = this.now;
 
- /**
+	/**
   * The rendering context.
   *
   * @property ctx
@@ -193,12 +261,12 @@ function Overtime(options)
   * @private
   */
 
- this.ctx = null;
+	this.ctx = null;
 
- // Set the initial canvas.
- this.canvas = document.createElement("canvas");
+	// Set the initial canvas.
+	this.canvas = document.createElement("canvas");
 
- /**
+	/**
   * the start angle.
   *
   * @property startAngle
@@ -206,9 +274,9 @@ function Overtime(options)
   * @private
   */
 
- this.startAngle = -this.HALF_PI;
+	this.startAngle = -this.HALF_PI;
 
- /**
+	/**
   * A float threshold for the chrome rendering hack.
   *
   * @property threshold
@@ -216,9 +284,9 @@ function Overtime(options)
   * @private
   */
 
- this.threshold = 0.023;
+	this.threshold = 0.023;
 
- /**
+	/**
   * Radians of the full circle plus the start angle.
   *
   * @property fullCircle
@@ -226,9 +294,9 @@ function Overtime(options)
   * @private
   */
 
- this.fullCircle = this.startAngle + this.TWO_PI;
+	this.fullCircle = this.startAngle + this.TWO_PI;
 
- /**
+	/**
   * Colour of the progressing circle.
   *
   * @property primaryStrokeStyle
@@ -236,9 +304,9 @@ function Overtime(options)
   * @default rgba(255, 100, 0, 0.9)
   */
 
- this.primaryStrokeStyle = "rgba(255, 100, 0, 0.9)";
+	this.primaryStrokeStyle = "rgba(255, 100, 0, 0.9)";
 
- /**
+	/**
   * Colour of the empty circle.
   *
   * @property secondaryStrokeStyle
@@ -246,18 +314,18 @@ function Overtime(options)
   * @default rgba(0, 0, 0, 0.1)
   */
 
- this.secondaryStrokeStyle = "rgba(0, 0, 0, 0.1)";
+	this.secondaryStrokeStyle = "rgba(0, 0, 0, 0.1)";
 
- /**
+	/**
   * Returns the remaining time.
   *
   * @event update
   * @param {Number} time - The remaining time.
   */
 
- this.updateEvent = {type: "update", time: 0};
+	this.updateEvent = { type: "update", time: 0 };
 
- /**
+	/**
   * The currently set time measure.
   *
   * @property tm
@@ -265,9 +333,9 @@ function Overtime(options)
   * @private
   */
 
- this.tm = Overtime.TimeMeasure.MILLISECONDS;
+	this.tm = Overtime.TimeMeasure.MILLISECONDS;
 
- /**
+	/**
   * The remaining time in milliseconds.
   *
   * @property t
@@ -275,21 +343,27 @@ function Overtime(options)
   * @private
   */
 
- this.t = 1;
+	this.t = 1;
 
- // Overwrite the defaults.
- if(options !== undefined)
- {
-  if(options.timeMeasure > 0) { this.tm = options.timeMeasure; }
-  if(options.time > 0) { this.t = options.time; }
-  if(options.canvas !== undefined) { this.canvas = options.canvas; }
-  this.size = options.size;
- }
+	// Overwrite the defaults.
+	if (options !== undefined) {
 
- // Update the time.
- this.t *= this.tm;
+		if (options.timeMeasure > 0) {
+			this.tm = options.timeMeasure;
+		}
+		if (options.time > 0) {
+			this.t = options.time;
+		}
+		if (options.canvas !== undefined) {
+			this.canvas = options.canvas;
+		}
+		this.size = options.size;
+	}
 
- /**
+	// Update the time.
+	this.t *= this.tm;
+
+	/**
   * The total time.
   *
   * @property T
@@ -297,47 +371,54 @@ function Overtime(options)
   * @private
   */
 
- this.T = this.t;
+	this.T = this.t;
 
- // Try to recover time values from a previous session.
- if(localStorage.getItem("overtime"))
- {
-  try
-  {
-   o = JSON.parse(localStorage.getItem("overtime"));
-   if(o.tm !== undefined) { this.tm = o.tm; }
-   if(o.t !== undefined) { this.t = o.t; }
-   if(o.T !== undefined) { this.T = o.T; }
-  }
-  catch(e) { /* Swallow. */ }
- }
+	// Try to recover time values from a previous session.
+	if (localStorage.getItem("overtime")) {
 
- /**
+		try {
+
+			o = JSON.parse(localStorage.getItem("overtime"));
+			if (o.tm !== undefined) {
+				this.tm = o.tm;
+			}
+			if (o.t !== undefined) {
+				this.t = o.t;
+			}
+			if (o.T !== undefined) {
+				this.T = o.T;
+			}
+		} catch (e) {/* Swallow. */}
+	}
+
+	/**
   * Stores the time values for the next session.
   *
   * @method persist
   * @private
   */
 
- window.addEventListener("unload", function persist()
- {
-  localStorage.setItem("overtime", JSON.stringify({
-   tm: self.tm,
-   t: self.t,
-   T: self.T
-  }));
- });
+	window.addEventListener("unload", function persist() {
 
- /**
+		localStorage.setItem("overtime", JSON.stringify({
+			tm: self.tm,
+			t: self.t,
+			T: self.T
+		}));
+	});
+
+	/**
   * The update function.
   *
   * @method update
   */
 
- this.update = function() { self._update(); };
+	this.update = function () {
+		self._update();
+	};
 }
 
-Overtime.prototype = Object.create(EventDispatcher.prototype);
+Overtime.prototype = Object.create(_zayeshEventdispatcher2["default"].prototype);
 Overtime.prototype.constructor = Overtime;
 
 /**
@@ -348,17 +429,22 @@ Overtime.prototype.constructor = Overtime;
  */
 
 Object.defineProperty(Overtime.prototype, "canvas", {
- get: function() { return this.ctx.canvas; },
- set: function(c)
- {
-  if(c !== undefined && c.getContext !== undefined)
-  {
-   this.stop();
-   this.ctx = c.getContext("2d");
-   this.ctx.strokeStyle = this.primaryStrokeStyle;
-   this.size = [c.width, c.height];
-  }
- }
+
+	get: function get() {
+		return this.ctx.canvas;
+	},
+
+	set: function set(c) {
+
+		if (c !== undefined && c.getContext !== undefined) {
+
+			this.stop();
+			this.ctx = c.getContext("2d");
+			this.ctx.strokeStyle = this.primaryStrokeStyle;
+			this.size = [c.width, c.height];
+		}
+	}
+
 });
 
 /**
@@ -369,17 +455,22 @@ Object.defineProperty(Overtime.prototype, "canvas", {
  */
 
 Object.defineProperty(Overtime.prototype, "time", {
- get: function() { return this.t; },
- set: function(t)
- {
-  if(t >= 0)
-  {
-   this.stop();
-   this.t = t * this.tm;
-   this.T = this.t;
-   this._render();
-  }
- }
+
+	get: function get() {
+		return this.t;
+	},
+
+	set: function set(t) {
+
+		if (t >= 0) {
+
+			this.stop();
+			this.t = t * this.tm;
+			this.T = this.t;
+			this._render();
+		}
+	}
+
 });
 
 /**
@@ -391,14 +482,19 @@ Object.defineProperty(Overtime.prototype, "time", {
  */
 
 Object.defineProperty(Overtime.prototype, "timeMeasure", {
- get: function() { return this.tm; },
- set: function(tm)
- {
-  if(tm > 0)
-  {
-   this.tm = tm;
-  }
- }
+
+	get: function get() {
+		return this.tm;
+	},
+
+	set: function set(tm) {
+
+		if (tm > 0) {
+
+			this.tm = tm;
+		}
+	}
+
 });
 
 /**
@@ -411,23 +507,23 @@ Object.defineProperty(Overtime.prototype, "timeMeasure", {
  */
 
 Object.defineProperty(Overtime.prototype, "size", {
- get: function()
- {
-  return [
-   this.ctx.canvas.width,
-   this.ctx.canvas.height
-  ];
- },
- set: function(s)
- {
-  if(s !== undefined)
-  {
-   this.ctx.canvas.width = s[0];
-   this.ctx.canvas.height = s[1];
-   this.ctx.lineWidth = (s[0] < s[1]) ? s[0] * 0.05 : s[1] * 0.05;
-   this._render();
-  }
- }
+
+	get: function get() {
+
+		return [this.ctx.canvas.width, this.ctx.canvas.height];
+	},
+
+	set: function set(s) {
+
+		if (s !== undefined) {
+
+			this.ctx.canvas.width = s[0];
+			this.ctx.canvas.height = s[1];
+			this.ctx.lineWidth = s[0] < s[1] ? s[0] * 0.05 : s[1] * 0.05;
+			this._render();
+		}
+	}
+
 });
 
 /**
@@ -437,40 +533,46 @@ Object.defineProperty(Overtime.prototype, "size", {
  * @private
  */
 
-Overtime.prototype._render = function()
-{
- var ctx = this.ctx,
-  w = ctx.canvas.width,
-  h = ctx.canvas.height,
-  hw = w >> 1, hh = h >> 1,
-  radius = w < h ? hw : hh,
-  endAngle,
-  tooThin; // Chrome hack.
+Overtime.prototype._render = function () {
 
- if(this.clearCanvas) { ctx.clearRect(0, 0, w, h); }
+	var ctx = this.ctx,
+	    w = ctx.canvas.width,
+	    h = ctx.canvas.height,
+	    hw = w >> 1,
+	    hh = h >> 1,
+	    radius = w < h ? hw : hh,
+	    endAngle,
+	    tooThin; // Chrome hack.
 
- // Don't bleed over the edge.
- radius -= ctx.lineWidth;
+	if (this.clearCanvas) {
+		ctx.clearRect(0, 0, w, h);
+	}
 
- // Draw the progress.
- endAngle = this.startAngle + this.TWO_PI * ((this.T - this.t) / this.T);
- tooThin = (endAngle - this.startAngle < this.threshold); // Chrome hack.
- ctx.strokeStyle = this.primaryStrokeStyle;
- ctx.beginPath();
- ctx.arc(hw, hh, radius, tooThin ? this.startAngle - this.threshold : this.startAngle, endAngle, false); // Chrome hack.
- //ctx.arc(hw, hh, radius, this.startAngle, endAngle, false);
- ctx.stroke();
- if(tooThin) { ctx.clearRect(0, 0, hw - this.threshold, hh); } // Chrome hack.
+	// Don't bleed over the edge.
+	radius -= ctx.lineWidth;
 
- // Draw the rest of the circle in another color.
- if(endAngle < this.fullCircle)
- {
-  // No hacking here cause can't clear.
-  ctx.strokeStyle = this.secondaryStrokeStyle;
-  ctx.beginPath();
-  ctx.arc(hw, hh, radius, endAngle, this.fullCircle, false);
-  ctx.stroke();
- }
+	// Draw the progress.
+	endAngle = this.startAngle + this.TWO_PI * ((this.T - this.t) / this.T);
+	tooThin = endAngle - this.startAngle < this.threshold; // Chrome hack.
+	ctx.strokeStyle = this.primaryStrokeStyle;
+	ctx.beginPath();
+	ctx.arc(hw, hh, radius, tooThin ? this.startAngle - this.threshold : this.startAngle, endAngle, false); // Chrome hack.
+	//ctx.arc(hw, hh, radius, this.startAngle, endAngle, false);
+	ctx.stroke();
+
+	if (tooThin) {
+		ctx.clearRect(0, 0, hw - this.threshold, hh);
+	} // Chrome hack.
+
+	// Draw the rest of the circle in another color.
+	if (endAngle < this.fullCircle) {
+
+		// No hacking here cause can't clear.
+		ctx.strokeStyle = this.secondaryStrokeStyle;
+		ctx.beginPath();
+		ctx.arc(hw, hh, radius, endAngle, this.fullCircle, false);
+		ctx.stroke();
+	}
 };
 
 /**
@@ -481,33 +583,34 @@ Overtime.prototype._render = function()
  * @private
  */
 
-Overtime.prototype._update = function()
-{
- var elapsed;
+Overtime.prototype._update = function () {
 
- // Calculate the time span between this run and the last.
- this.now = Date.now();
- elapsed = this.now - this.then;
- this.then = this.now;
+	var elapsed;
 
- // Update the time.
- this.t -= elapsed;
- if(this.t < 0) { this.t = 0; }
- this.updateEvent.time = this.t;
- this.dispatchEvent(this.updateEvent);
+	// Calculate the time span between this run and the last.
+	this.now = Date.now();
+	elapsed = this.now - this.then;
+	this.then = this.now;
 
- // Render the time.
- this._render();
+	// Update the time.
+	this.t -= elapsed;
+	if (this.t < 0) {
+		this.t = 0;
+	}
+	this.updateEvent.time = this.t;
+	this.dispatchEvent(this.updateEvent);
 
- // Continue or exit.
- if(this.t > 0)
- {
-  this.animId = requestAnimationFrame(this.update);
- }
- else
- {
-  this.dispatchEvent({type: "elapsed"});
- }
+	// Render the time.
+	this._render();
+
+	// Continue or exit.
+	if (this.t > 0) {
+
+		this.animId = requestAnimationFrame(this.update);
+	} else {
+
+		this.dispatchEvent({ type: "elapsed" });
+	}
 };
 
 /**
@@ -516,13 +619,13 @@ Overtime.prototype._update = function()
  * @method stop
  */
 
-Overtime.prototype.stop = function()
-{
- if(this.animId !== 0)
- {
-  cancelAnimationFrame(this.animId);
-  this.animId = 0;
- }
+Overtime.prototype.stop = function () {
+
+	if (this.animId !== 0) {
+
+		cancelAnimationFrame(this.animId);
+		this.animId = 0;
+	}
 };
 
 /**
@@ -532,12 +635,12 @@ Overtime.prototype.stop = function()
  * @method start
  */
 
-Overtime.prototype.start = function()
-{
- this.stop();
- this.now = Date.now();
- this.then = this.now;
- this.update();
+Overtime.prototype.start = function () {
+
+	this.stop();
+	this.now = Date.now();
+	this.then = this.now;
+	this.update();
 };
 
 /**
@@ -546,11 +649,11 @@ Overtime.prototype.start = function()
  * @method rewind
  */
 
-Overtime.prototype.rewind = function()
-{
- this.stop();
- this.t = this.T;
- this._render();
+Overtime.prototype.rewind = function () {
+
+	this.stop();
+	this.t = this.T;
+	this._render();
 };
 
 /**
@@ -561,15 +664,17 @@ Overtime.prototype.rewind = function()
  * @param {Number} t - The time by which to rewind. Interpreted according to the current time measure. A negative value corresponds to fast-forwarding.
  */
 
-Overtime.prototype.rewindBy = function(t)
-{
- if(typeof t === "number" && !isNaN(t) && t !== 0)
- {
-  this.stop();
-  this.t += t * this.tm;
-  if(this.t > this.T) { this.t = this.T; }
-  this._render();
- }
+Overtime.prototype.rewindBy = function (t) {
+
+	if (typeof t === "number" && !isNaN(t) && t !== 0) {
+
+		this.stop();
+		this.t += t * this.tm;
+		if (this.t > this.T) {
+			this.t = this.T;
+		}
+		this._render();
+	}
 };
 
 /**
@@ -579,12 +684,12 @@ Overtime.prototype.rewindBy = function(t)
  * @param {Number} t - The time value by which to rewind. Will be interpreted according to the current time measure. A negative value corresponds to rewinding.
  */
 
-Overtime.prototype.advanceBy = function(t)
-{
- if(typeof t === "number" && !isNaN(t))
- {
-  this.rewindBy(-t);
- }
+Overtime.prototype.advanceBy = function (t) {
+
+	if (typeof t === "number" && !isNaN(t)) {
+
+		this.rewindBy(-t);
+	}
 };
 
 /**
@@ -594,17 +699,19 @@ Overtime.prototype.advanceBy = function(t)
  * @param {Number} t - The time value to add. Will be interpreted according to the current time measure. A negative value corresponds to shortening.
  */
 
-Overtime.prototype.prolongBy = function(t)
-{
- if(typeof t === "number" && !isNaN(t) && t !== 0)
- {
-  this.stop();
-  t *= this.tm;
-  this.t += t;
-  this.T += t;
-  if(this.T < 0) { this.T = this.t = 0; }
-  this._render();
- }
+Overtime.prototype.prolongBy = function (t) {
+
+	if (typeof t === "number" && !isNaN(t) && t !== 0) {
+
+		this.stop();
+		t *= this.tm;
+		this.t += t;
+		this.T += t;
+		if (this.T < 0) {
+			this.T = this.t = 0;
+		}
+		this._render();
+	}
 };
 
 /**
@@ -614,12 +721,12 @@ Overtime.prototype.prolongBy = function(t)
  * @param {Number} t - The time value to subtract. Will be interpreted according to the current time measure. A negative value corresponds to prolonging.
  */
 
-Overtime.prototype.shortenBy = function(t)
-{
- if(typeof t === "number" && !isNaN(t))
- {
-  this.prolongBy(-t);
- }
+Overtime.prototype.shortenBy = function (t) {
+
+	if (typeof t === "number" && !isNaN(t)) {
+
+		this.prolongBy(-t);
+	}
 };
 
 /**
@@ -632,15 +739,165 @@ Overtime.prototype.shortenBy = function(t)
  */
 
 Overtime.TimeMeasure = Object.freeze({
- MILLISECONDS: 1,
- SECONDS: 1000,
- MINUTES: 60000,
- HOURS: 3600000
+	MILLISECONDS: 1,
+	SECONDS: 1000,
+	MINUTES: 60000,
+	HOURS: 3600000
 });
+module.exports = exports["default"];
 
-},{"@zayesh/eventdispatcher":1}],3:[function(require,module,exports){
-"use strict";
+},{"@zayesh/eventdispatcher":1}]},{},[2])(2)
+});
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"@zayesh/eventdispatcher":2}],2:[function(require,module,exports){
+/**
+ * eventdispatcher v0.1.5 build Sep 16 2015
+ * https://github.com/vanruesc/eventdispatcher
+ * Copyright 2015 Raoul van Rueschen, Zlib
+ */
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	global.EventDispatcher = factory();
+}(this, function () { 'use strict';
 
+	/**
+	 * A base class for adding and removing event listeners and dispatching events.
+	 *
+	 * @class EventDispatcher
+	 * @constructor
+	 */
+
+	function EventDispatcher() {
+
+		/**
+		 * A map of listeners.
+		 *
+		 * @property _listeners
+		 * @type Object
+		 * @private
+		 */
+
+		this._listeners = {};
+
+	}
+
+	/**
+	 * Extends an object with the event dispatcher functionality.
+	 *
+	 * @method apply
+	 * @param {Object} object - The object.
+	 * @example
+	 *  EventDispatcher.prototype.apply(X.prototype);
+	 */
+
+	EventDispatcher.prototype.apply = function(object) {
+
+		object._listeners = {};
+		object.addEventListener = EventDispatcher.prototype.addEventListener;
+		object.hasEventListener = EventDispatcher.prototype.hasEventListener;
+		object.removeEventListener = EventDispatcher.prototype.removeEventListener;
+		object.dispatchEvent = EventDispatcher.prototype.dispatchEvent;
+
+	};
+
+	/**
+	 * Adds an event listener.
+	 *
+	 * @method addEventListener
+	 * @param {String} type - The event type.
+	 * @param {Function} listener - The event listener.
+	 */
+
+	EventDispatcher.prototype.addEventListener = function(type, listener) {
+
+		if(this._listeners[type] === undefined) {
+
+			this._listeners[type] = [];
+
+		}
+
+		if(this._listeners[type].indexOf(listener) === -1) {
+
+			this._listeners[type].push(listener);
+
+		}
+
+	};
+
+	/**
+	 * Checks if the event listener exists.
+	 *
+	 * @method hasEventListener
+	 * @param {String} type - The event type.
+	 * @param {Function} listener - The event listener.
+	 */
+
+	EventDispatcher.prototype.hasEventListener = function(type, listener) {
+
+		return (this._listeners[type] !== undefined && this._listeners[type].indexOf(listener) !== -1);
+
+	};
+
+	/**
+	 * Removes an event listener.
+	 *
+	 * @method removeEventListener
+	 * @param {String} type - The event type.
+	 * @param {Function} listener - The event listener.
+	 */
+
+	EventDispatcher.prototype.removeEventListener = function(type, listener) {
+
+		var i, listenerArray;
+
+		listenerArray = this._listeners[type];
+
+		if(listenerArray !== undefined) {
+
+			i = listenerArray.indexOf(listener);
+
+			if(i !== -1) {
+
+				listenerArray.splice(i, 1);
+
+			}
+
+		}
+
+	};
+
+	/**
+	 * Dispatches an event to all respective listeners.
+	 *
+	 * @method dispatchEvent
+	 * @param {Object} event - The event.
+	 */
+
+	EventDispatcher.prototype.dispatchEvent = function(event) {
+
+		var i, l, listenerArray;
+
+		listenerArray = this._listeners[event.type];
+
+		if(listenerArray !== undefined) {
+
+			event.target = this;
+
+			for(i = 0, l = listenerArray.length; i < l; ++i) {
+
+				listenerArray[i].call(this, event);
+
+			}
+
+		}
+
+	};
+
+	return EventDispatcher;
+
+}));
+},{}],3:[function(require,module,exports){
 /**
  * A compilation of static functions.
  * This system uses Overtime to display a
@@ -650,7 +907,13 @@ Overtime.TimeMeasure = Object.freeze({
  * @static
  */
 
-var Overtime = require("overtime");
+"use strict";
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _overtime = require("overtime");
+
+var _overtime2 = _interopRequireDefault(_overtime);
 
 /**
  * The Overtime instance.
@@ -760,12 +1023,11 @@ var voteCount;
  * @static
  */
 
-function resize()
-{
- var min = (container.offsetWidth < container.offsetHeight) ?
-  container.offsetWidth : container.offsetHeight;
+function resize() {
 
- overtime.size = [min, min];
+  var min = container.offsetWidth < container.offsetHeight ? container.offsetWidth : container.offsetHeight;
+
+  overtime.size = [min, min];
 }
 
 /**
@@ -776,41 +1038,42 @@ function resize()
  * @static
  */
 
-function copyTime()
-{
- var m, s;
+function copyTime() {
 
- try
- {
-  m = parseInt(minutes.value);
-  s = parseInt(seconds.value);
-  --s;
+  var m, s;
 
-  if(m > 59) { m = 59; }
-  if(s > 59) { s = 59; }
+  try {
 
-  if(s < 0 && m === 0)
-  {
-   overtime.timeMeasure = Overtime.TimeMeasure.MILLISECONDS;
-   overtime.time = 1;
-  }
-  else if(s === 0 && m === 0)
-  {
-   overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
-   overtime.time = 1;
-  }
-  else
-  {
-   overtime.timeMeasure = Overtime.TimeMeasure.MINUTES;
-   overtime.time = m;
-   overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
-   overtime.prolongBy(s + 1);
-  }
+    m = parseInt(minutes.value);
+    s = parseInt(seconds.value);
+    --s;
 
-  overtime.rewind();
-  displayTime(overtime);
- }
- catch(e) { /* Ignore invalid input. */ }
+    if (m > 59) {
+      m = 59;
+    }
+    if (s > 59) {
+      s = 59;
+    }
+
+    if (s < 0 && m === 0) {
+
+      overtime.timeMeasure = _overtime2["default"].TimeMeasure.MILLISECONDS;
+      overtime.time = 1;
+    } else if (s === 0 && m === 0) {
+
+      overtime.timeMeasure = _overtime2["default"].TimeMeasure.SECONDS;
+      overtime.time = 1;
+    } else {
+
+      overtime.timeMeasure = _overtime2["default"].TimeMeasure.MINUTES;
+      overtime.time = m;
+      overtime.timeMeasure = _overtime2["default"].TimeMeasure.SECONDS;
+      overtime.prolongBy(s + 1);
+    }
+
+    overtime.rewind();
+    displayTime(overtime);
+  } catch (e) {/* Ignore invalid input. */}
 }
 
 /**
@@ -822,16 +1085,20 @@ function copyTime()
  * @param {Object} event - The event.
  */
 
-function displayTime(event)
-{
- var ms = event.time, m, s;
+function displayTime(event) {
 
- if(ms > 1) { ms += 1000; }
+  var ms = event.time,
+      m,
+      s;
 
- m = ((ms / 60000) % 60) | 0;
- s = ((ms / 1000) % 60) | 0;
- minutes.value = (m < 10) ? "0" + m : m;
- seconds.value = (s < 10) ? "0" + s : s;
+  if (ms > 1) {
+    ms += 1000;
+  }
+
+  m = ms / 60000 % 60 | 0;
+  s = ms / 1000 % 60 | 0;
+  minutes.value = m < 10 ? "0" + m : m;
+  seconds.value = s < 10 ? "0" + s : s;
 }
 
 /**
@@ -842,10 +1109,10 @@ function displayTime(event)
  * @static
  */
 
-function enableTimeControls()
-{
- minutes.disabled = false;
- seconds.disabled = false;
+function enableTimeControls() {
+
+  minutes.disabled = false;
+  seconds.disabled = false;
 }
 
 /**
@@ -857,17 +1124,17 @@ function enableTimeControls()
  * @return {boolean} Whether the time controls were editable before they were disabled.
  */
 
-function disableTimeControls()
-{
- var enabled = !minutes.disabled && !seconds.disabled;
+function disableTimeControls() {
 
- if(enabled)
- {
-  minutes.disabled = true;
-  seconds.disabled = true;
- }
+  var enabled = !minutes.disabled && !seconds.disabled;
 
- return enabled;
+  if (enabled) {
+
+    minutes.disabled = true;
+    seconds.disabled = true;
+  }
+
+  return enabled;
 }
 
 /**
@@ -878,35 +1145,33 @@ function disableTimeControls()
  * @static
  */
 
-function handleResponse()
-{
- var oldVoteCount = voteCount;
+function handleResponse() {
 
- if(this.readyState === 4)
- {
-  try
-  {
-   voteCount = parseInt(this.responseText);
-  }
-  catch(e)
-  {
-   voteCount = Number.NaN;
-  }
+  var oldVoteCount = voteCount;
 
-  if(typeof voteCount === "number" && !isNaN(voteCount))
-  {
-   if(voteCount !== oldVoteCount)
-   {
-    // Fancy update animation goes here.
-    votes.innerHTML = voteCount;
-    oldVoteCount = voteCount;
-   }
+  if (this.readyState === 4) {
+
+    try {
+
+      voteCount = parseInt(this.responseText);
+    } catch (e) {
+
+      voteCount = Number.NaN;
+    }
+
+    if (typeof voteCount === "number" && !isNaN(voteCount)) {
+
+      if (voteCount !== oldVoteCount) {
+
+        // Fancy update animation goes here.
+        votes.innerHTML = voteCount;
+        oldVoteCount = voteCount;
+      }
+    } else {
+
+      clearInterval(intervalId);
+    }
   }
-  else
-  {
-   clearInterval(intervalId);
-  }
- }
 }
 
 /**
@@ -917,11 +1182,11 @@ function handleResponse()
  * @static
  */
 
-function requestVoteCount()
-{
- xhr.open("GET", window.location.href.replace(new RegExp("evaluation/"), "evaluation/vote-count?uid="), true);
- xhr.timeout = timeout - 1000;
- xhr.send();
+function requestVoteCount() {
+
+  xhr.open("GET", window.location.href.replace(new RegExp("evaluation/"), "evaluation/vote-count?uid="), true);
+  xhr.timeout = timeout - 1000;
+  xhr.send();
 }
 
 /**
@@ -932,74 +1197,75 @@ function requestVoteCount()
  * @static
  */
 
-window.addEventListener("load", function init()
-{
- overtime = new Overtime();
+window.addEventListener("load", function init() {
 
- container = document.getElementById("overtime");
- seconds = document.getElementById("seconds");
- minutes = document.getElementById("minutes");
- votes = document.getElementById("votes");
+  overtime = new _overtime2["default"]();
 
- // Make sure that all elements are present.
- if(container && minutes && seconds && votes)
- {
-  // Adjust the size of the canvas and add it to the page.
-  resize();
-  window.addEventListener("resize", resize);
-  container.appendChild(overtime.canvas);
+  container = document.getElementById("overtime");
+  seconds = document.getElementById("seconds");
+  minutes = document.getElementById("minutes");
+  votes = document.getElementById("votes");
 
-  // Reset time to 30 minutes.
-  overtime.timeMeasure = Overtime.TimeMeasure.MINUTES;
-  overtime.time = 30;
-  overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
-  overtime.shortenBy(1);
-  overtime.rewind();
-  displayTime(overtime);
+  // Make sure that all elements are present.
+  if (container && minutes && seconds && votes) {
 
-  // Update the time in the two input fields.
-  overtime.addEventListener("update", displayTime);
+    // Adjust the size of the canvas and add it to the page.
+    resize();
+    window.addEventListener("resize", resize);
+    container.appendChild(overtime.canvas);
 
-  overtime.addEventListener("elapsed", function()
-  {
-   enableTimeControls();
+    // Reset time to 30 minutes.
+    overtime.timeMeasure = _overtime2["default"].TimeMeasure.MINUTES;
+    overtime.time = 30;
+    overtime.timeMeasure = _overtime2["default"].TimeMeasure.SECONDS;
+    overtime.shortenBy(1);
+    overtime.rewind();
+    displayTime(overtime);
 
-   // Implement fancy finish effect here maybe.
-   window.alert("Die Zeit ist um!");
-  });
+    // Update the time in the two input fields.
+    overtime.addEventListener("update", displayTime);
 
-  document.getElementById("stop").addEventListener("click", function()
-  {
-   overtime.stop();
-   enableTimeControls();
-  });
+    overtime.addEventListener("elapsed", function () {
 
-  document.getElementById("start").addEventListener("click", function()
-  {
-   if(disableTimeControls())
-   {
-    copyTime();
-   }
+      enableTimeControls();
 
-   overtime.start();
-  });
+      // Implement fancy finish effect here maybe.
+      window.alert("Die Zeit ist um!");
+    });
 
-  // Show the current time (persists over multiple sessions).
-  displayTime(overtime);
-  enableTimeControls();
+    document.getElementById("stop").addEventListener("click", function () {
 
-  // Try to request the current vote count.
-  if(XMLHttpRequest !== undefined)
-  {
-   xhr = new XMLHttpRequest();
-   xhr.addEventListener("readystatechange", handleResponse);
-   xhr.addEventListener("timeout", function() {});
-   intervalId = setInterval(requestVoteCount, timeout);
+      overtime.stop();
+      enableTimeControls();
+    });
+
+    document.getElementById("start").addEventListener("click", function () {
+
+      if (disableTimeControls()) {
+
+        copyTime();
+      }
+
+      overtime.start();
+    });
+
+    // Show the current time (persists over multiple sessions).
+    displayTime(overtime);
+    enableTimeControls();
+
+    // Try to request the current vote count.
+    if (XMLHttpRequest !== undefined) {
+
+      xhr = new XMLHttpRequest();
+      xhr.addEventListener("readystatechange", handleResponse);
+      xhr.addEventListener("timeout", function () {});
+      intervalId = setInterval(requestVoteCount, timeout);
+    }
   }
- }
 
- // Clean up.
- window.removeEventListener("load", init);
+  // Clean up.
+  window.removeEventListener("load", init);
 });
 
-},{"overtime":2}]},{},[3]);
+},{"overtime":1}]},{},[3])(3)
+});

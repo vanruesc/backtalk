@@ -8,7 +8,7 @@ It is intended to be used in that environment only.
 
 ## Installation
 
-Download or simply reference the [minified bundle](http://vanruesc.github.io/backtalk/build/backtalk.min.js):
+Load the [minified bundle](http://vanruesc.github.io/backtalk/build/backtalk.min.js) as follows:
 
 ```html
 <script src="/js/backtalk.min.js"></script>

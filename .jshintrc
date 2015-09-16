@@ -4,6 +4,7 @@
   "curly": true,
   "eqeqeq": true,
   "eqnull": true,
+  "esnext": true,
   "immed": true,
   "jasmine": true,
   "latedef": "nofunc",
