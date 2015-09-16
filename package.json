@@ -36,13 +36,12 @@
 		"jshint:banner": "jshint banner.js",
 		"jshint:lib": "jshint src",
 		"jshint": "npm run jshint:banner && npm run jshint:lib",
+		"uglify": "uglifyjs build/backtalk.js -c -m -o build/backtalk.min.js",
 		"prebuild": "npm run jshint",
 		"build": "mkdirp build && browserify src/backtalk.js -t babelify -s Backtalk -o build/backtalk.js",
-		"postbuild": "npm run uglify",
-		"uglify": "uglifyjs build/backtalk.js -c -m -o build/backtalk.min.js",
+		"postbuild": "npm run uglify && node banner.js",
 		"pretest": "npm run build",
-		"test": "echo \"No tests specified.\"",
-		"posttest": "node banner.js"
+		"test": "echo \"No tests specified.\""
   },
 
   "engines": {
