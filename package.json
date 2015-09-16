@@ -34,9 +34,8 @@
 
   "scripts": {
 		"jshint:banner": "jshint banner.js",
-		"jshint:test": "jshint test",
 		"jshint:lib": "jshint src",
-		"jshint": "npm run jshint:banner && npm run jshint:test && npm run jshint:lib",
+		"jshint": "npm run jshint:banner && npm run jshint:lib",
 		"prebuild": "npm run jshint",
 		"build": "mkdirp build && browserify src/backtalk.js -t babelify -s Backtalk -o build/backtalk.js",
 		"uglify": "uglifyjs build/backtalk.js -c -m -o build/backtalk.min.js",
