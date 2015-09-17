@@ -1,14 +1,14 @@
 {
-  "name": "backtalk",
-  "version": "0.0.0",
-  "private": true,
-  "description": "The front end of the FHB lecture evaluation app project.",
-  "homepage": "https://github.com/vanruesc/backtalk",
-  "main": "build/backtalk",
+	"name": "backtalk",
+	"version": "0.0.0",
+	"private": true,
+	"description": "The front end of the FHB lecture evaluation app project.",
+	"homepage": "https://github.com/vanruesc/backtalk",
+	"main": "build/backtalk",
 	"jsnext:main": "src/backtalk",
-  "license": "Zlib",
+	"license": "Zlib",
 
-  "keywords": [
+	"keywords": [
 		"campus",
 		"lecture",
 		"evaluation",
@@ -17,23 +17,23 @@
 		"university",
 		"fachhochschule",
 		"brandenburg"
-  ],
+	],
 
-  "author": {
-    "name": "Raoul van Rueschen",
-    "email": "vanruesc@fh-brandenburg.de"
-  },
+	"author": {
+		"name": "Raoul van Rueschen",
+		"email": "vanruesc@fh-brandenburg.de"
+	},
 
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/vanruesc/backtalk.git"
-  },
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/vanruesc/backtalk.git"
+	},
 
-  "bugs": {
-    "url": "https://github.com/vanruesc/backtalk/issues"
-  },
+	"bugs": {
+		"url": "https://github.com/vanruesc/backtalk/issues"
+	},
 
-  "scripts": {
+	"scripts": {
 		"jshint:banner": "jshint banner.js",
 		"jshint:lib": "jshint src",
 		"jshint": "npm run jshint:banner && npm run jshint:lib",
@@ -44,23 +44,23 @@
 		"postbuild": "npm run uglify && node banner.js",
 		"pretest": "npm run build",
 		"test": "echo \"No tests specified.\""
-  },
+	},
 
-  "engines": {
-    "node": ">= 0.10.0"
-  },
+	"engines": {
+		"node": ">= 0.10.0"
+	},
 
-  "dependencies": {
-    "overtime": "x.x.x"
-  },
+	"dependencies": {
+		"overtime": "x.x.x"
+	},
 
-  "devDependencies": {
+	"devDependencies": {
 		"babelify": "6.x.x",
 		"browserify": "11.x.x",
 		"mkdirp": "0.x.x",
 		"jshint": "2.x.x",
 		"prepend-file": "1.x.x",
 		"uglify-js": "2.x.x"
-  }
+	}
 
 }
