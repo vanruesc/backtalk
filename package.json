@@ -4,7 +4,8 @@
   "private": true,
   "description": "The front end of the FHB lecture evaluation app project.",
   "homepage": "https://github.com/vanruesc/backtalk",
-  "main": "src/backtalk",
+  "main": "build/backtalk",
+	"jsnext:main": "src/backtalk",
   "license": "Zlib",
 
   "keywords": [
@@ -36,9 +37,10 @@
 		"jshint:banner": "jshint banner.js",
 		"jshint:lib": "jshint src",
 		"jshint": "npm run jshint:banner && npm run jshint:lib",
+		"browserify": "mkdirp build && browserify src/backtalk.js -t babelify -s Backtalk -o build/backtalk.js",
 		"uglify": "uglifyjs build/backtalk.js -c -m -o build/backtalk.min.js",
 		"prebuild": "npm run jshint",
-		"build": "mkdirp build && browserify src/backtalk.js -t babelify -s Backtalk -o build/backtalk.js",
+		"build": "npm run browserify",
 		"postbuild": "npm run uglify && node banner.js",
 		"pretest": "npm run build",
 		"test": "echo \"No tests specified.\""
