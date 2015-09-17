@@ -34,16 +34,18 @@
 	},
 
 	"scripts": {
+		"jshint:build": "jshint build.js",
 		"jshint:banner": "jshint banner.js",
 		"jshint:lib": "jshint src",
-		"jshint": "npm run jshint:banner && npm run jshint:lib",
-		"browserify": "mkdirp build && browserify src/backtalk.js -t babelify -s Backtalk -o build/backtalk.js",
+		"jshint": "npm run jshint:build && npm run jshint:banner && npm run jshint:lib",
+		"rollup": "node build.js",
 		"uglify": "uglifyjs build/backtalk.js -c -m -o build/backtalk.min.js",
+		"yuidoc": "yuidoc src -q -c yuidoc.json",
 		"prebuild": "npm run jshint",
-		"build": "npm run browserify",
+		"build": "npm run rollup",
 		"postbuild": "npm run uglify && node banner.js",
 		"pretest": "npm run build",
-		"test": "echo \"No tests specified.\""
+		"test": "echo No tests specified."
 	},
 
 	"engines": {
@@ -55,12 +57,10 @@
 	},
 
 	"devDependencies": {
-		"babelify": "6.x.x",
-		"browserify": "11.x.x",
-		"mkdirp": "0.x.x",
 		"jshint": "2.x.x",
 		"prepend-file": "1.x.x",
-		"uglify-js": "2.x.x"
+		"rollup": "0.x.x",
+		"uglify-js": "2.x.x",
+		"yuidocjs": "0.x.x"
 	}
-
 }
