@@ -34,11 +34,10 @@
 	},
 
 	"scripts": {
-		"jshint:build": "jshint build.js",
 		"jshint:banner": "jshint banner.js",
 		"jshint:lib": "jshint src",
-		"jshint": "npm run jshint:build && npm run jshint:banner && npm run jshint:lib",
-		"rollup": "node build.js",
+		"jshint": "npm run jshint:banner && npm run jshint:lib",
+		"rollup": "rollup -f iife -n Backtalk -i src/backtalk.js -o build/backtalk.js",
 		"uglify": "uglifyjs build/backtalk.js -c -m -o build/backtalk.min.js",
 		"yuidoc": "yuidoc src -q -c yuidoc.json",
 		"prebuild": "npm run jshint",
