@@ -1,12 +1,16 @@
 /**
- * Banner.
+ * Recursively adds a banner to the specified files.
  */
 
-var prependFile = require("prepend-file"),
-	pkg = require("./package"),
-	pkgName = pkg.name.replace(/^@.+\//, ""),
-	date = (new Date()).toDateString(),
-	banner;
+var prependFile = require("prepend-file");
+var pkg = require("./package");
+
+var pkgName = pkg.name.replace(/^@.+\//, "");
+var date = (new Date()).toDateString();
+
+var banner = "/**\n * " + pkgName + " v" + pkg.version + " build " + date.slice(4) + "\n" +
+	" * " + pkg.homepage + "\n" +
+	" * Copyright " + date.slice(-4) + " " + pkg.author.name + ", " + pkg.license + "\n */\n";
 
 function prepend(files) {
 
@@ -25,10 +29,6 @@ function prepend(files) {
 	});
 
 }
-
-banner = "/**\n * " + pkgName + " v" + pkg.version + " build " + date.slice(4) + "\n" +
-	" * " + pkg.homepage + "\n" +
-	" * Copyright " + date.slice(-4) + " " + pkg.author.name + ", " + pkg.license + "\n */\n";
 
 prepend([
 	"build/" + pkgName + ".js",

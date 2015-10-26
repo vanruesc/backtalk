@@ -7,6 +7,7 @@
 Backtalk realises the front-end interaction part of the FHB Campus App's lecture evaluation module.
 It is intended to be used in that environment only.
 
+
 ## Installation
 
 Load the [minified bundle](http://vanruesc.github.io/backtalk/build/backtalk.min.js) as follows:
@@ -15,17 +16,15 @@ Load the [minified bundle](http://vanruesc.github.io/backtalk/build/backtalk.min
 <script src="/js/backtalk.min.js"></script>
 ```
 
+
 ## Documentation
 [API](http://vanruesc.github.io/backtalk/docs)
+
 
 ## Contributing
 Maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code.
 
-## Release History
-_Version: 0.0.0 (18.07.2015)_
-> Backtalk manages the time limit visualisation for active
-> evaluations by utilising the Overtime stopwatch library.
 
 ## License
-Copyright (c) 2015 Raoul van Rüschen  
+Copyright (c) 2015 Raoul van Rueschen  
 Licensed under the Zlib license.
