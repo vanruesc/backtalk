@@ -4,6 +4,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "Backtalk"
     ],
     "modules": [],
-    "allModules": []
+    "allModules": [],
+    "elements": []
 } };
 });

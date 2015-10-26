@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * A compilation of static functions.
  * This system uses Overtime to display a
@@ -9,7 +7,7 @@
  * @static
  */
 
-var Overtime = require("overtime");
+import Overtime from "overtime";
 
 /**
  * The Overtime instance.
@@ -119,12 +117,13 @@ var voteCount;
  * @static
  */
 
-function resize()
-{
- var min = (container.offsetWidth < container.offsetHeight) ?
-  container.offsetWidth : container.offsetHeight;
+function resize() {
 
- overtime.size = [min, min];
+	var min = (container.offsetWidth < container.offsetHeight) ?
+		container.offsetWidth : container.offsetHeight;
+
+	overtime.size = [min, min];
+
 }
 
 /**
@@ -135,41 +134,43 @@ function resize()
  * @static
  */
 
-function copyTime()
-{
- var m, s;
+function copyTime() {
 
- try
- {
-  m = parseInt(minutes.value);
-  s = parseInt(seconds.value);
-  --s;
+	var m, s;
 
-  if(m > 59) { m = 59; }
-  if(s > 59) { s = 59; }
+	try {
 
-  if(s < 0 && m === 0)
-  {
-   overtime.timeMeasure = Overtime.TimeMeasure.MILLISECONDS;
-   overtime.time = 1;
-  }
-  else if(s === 0 && m === 0)
-  {
-   overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
-   overtime.time = 1;
-  }
-  else
-  {
-   overtime.timeMeasure = Overtime.TimeMeasure.MINUTES;
-   overtime.time = m;
-   overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
-   overtime.prolongBy(s + 1);
-  }
+		m = parseInt(minutes.value);
+		s = parseInt(seconds.value);
+		--s;
 
-  overtime.rewind();
-  displayTime(overtime);
- }
- catch(e) { /* Ignore invalid input. */ }
+		if(m > 59) { m = 59; }
+		if(s > 59) { s = 59; }
+
+		if(s < 0 && m === 0) {
+
+			overtime.timeMeasure = Overtime.TimeMeasure.MILLISECONDS;
+			overtime.time = 1;
+
+		} else if(s === 0 && m === 0) {
+
+			overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
+			overtime.time = 1;
+
+		} else {
+
+			overtime.timeMeasure = Overtime.TimeMeasure.MINUTES;
+			overtime.time = m;
+			overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
+			overtime.prolongBy(s + 1);
+
+		}
+
+		overtime.rewind();
+		displayTime(overtime);
+
+	} catch(e) { /* Ignore invalid input. */ }
+
 }
 
 /**
@@ -181,16 +182,17 @@ function copyTime()
  * @param {Object} event - The event.
  */
 
-function displayTime(event)
-{
- var ms = event.time, m, s;
+function displayTime(event) {
 
- if(ms > 1) { ms += 1000; }
+	var ms = event.time, m, s;
 
- m = ((ms / 60000) % 60) | 0;
- s = ((ms / 1000) % 60) | 0;
- minutes.value = (m < 10) ? "0" + m : m;
- seconds.value = (s < 10) ? "0" + s : s;
+	if(ms > 1) { ms += 1000; }
+
+	m = ((ms / 60000) % 60) | 0;
+	s = ((ms / 1000) % 60) | 0;
+	minutes.value = (m < 10) ? "0" + m : m;
+	seconds.value = (s < 10) ? "0" + s : s;
+
 }
 
 /**
@@ -201,10 +203,11 @@ function displayTime(event)
  * @static
  */
 
-function enableTimeControls()
-{
- minutes.disabled = false;
- seconds.disabled = false;
+function enableTimeControls() {
+
+	minutes.disabled = false;
+	seconds.disabled = false;
+
 }
 
 /**
@@ -216,17 +219,19 @@ function enableTimeControls()
  * @return {boolean} Whether the time controls were editable before they were disabled.
  */
 
-function disableTimeControls()
-{
- var enabled = !minutes.disabled && !seconds.disabled;
+function disableTimeControls() {
 
- if(enabled)
- {
-  minutes.disabled = true;
-  seconds.disabled = true;
- }
+	var enabled = !minutes.disabled && !seconds.disabled;
 
- return enabled;
+	if(enabled) {
+
+		minutes.disabled = true;
+		seconds.disabled = true;
+
+	}
+
+	return enabled;
+
 }
 
 /**
@@ -237,35 +242,40 @@ function disableTimeControls()
  * @static
  */
 
-function handleResponse()
-{
- var oldVoteCount = voteCount;
+function handleResponse() {
 
- if(this.readyState === 4)
- {
-  try
-  {
-   voteCount = parseInt(this.responseText);
-  }
-  catch(e)
-  {
-   voteCount = Number.NaN;
-  }
+	var oldVoteCount = voteCount;
 
-  if(typeof voteCount === "number" && !isNaN(voteCount))
-  {
-   if(voteCount !== oldVoteCount)
-   {
-    // Fancy update animation goes here.
-    votes.innerHTML = voteCount;
-    oldVoteCount = voteCount;
-   }
-  }
-  else
-  {
-   clearInterval(intervalId);
-  }
- }
+	if(this.readyState === 4) {
+
+		try {
+
+			voteCount = parseInt(this.responseText);
+
+		} catch(e) {
+
+			voteCount = Number.NaN;
+
+		}
+
+		if(typeof voteCount === "number" && !isNaN(voteCount)) {
+
+			if(voteCount !== oldVoteCount) {
+
+				// Fancy update animation goes here.
+				votes.innerHTML = voteCount;
+				oldVoteCount = voteCount;
+
+			}
+
+		} else {
+
+			clearInterval(intervalId);
+
+		}
+
+	}
+
 }
 
 /**
@@ -276,11 +286,12 @@ function handleResponse()
  * @static
  */
 
-function requestVoteCount()
-{
- xhr.open("GET", window.location.href.replace(new RegExp("evaluation/"), "evaluation/vote-count?uid="), true);
- xhr.timeout = timeout - 1000;
- xhr.send();
+function requestVoteCount() {
+
+	xhr.open("GET", window.location.href.replace(new RegExp("evaluation/"), "evaluation/vote-count?uid="), true);
+	xhr.timeout = timeout - 1000;
+	xhr.send();
+
 }
 
 /**
@@ -291,72 +302,79 @@ function requestVoteCount()
  * @static
  */
 
-window.addEventListener("load", function init()
-{
- overtime = new Overtime();
+window.addEventListener("load", function init() {
 
- container = document.getElementById("overtime");
- seconds = document.getElementById("seconds");
- minutes = document.getElementById("minutes");
- votes = document.getElementById("votes");
+	overtime = new Overtime();
 
- // Make sure that all elements are present.
- if(container && minutes && seconds && votes)
- {
-  // Adjust the size of the canvas and add it to the page.
-  resize();
-  window.addEventListener("resize", resize);
-  container.appendChild(overtime.canvas);
+	container = document.getElementById("overtime");
+	seconds = document.getElementById("seconds");
+	minutes = document.getElementById("minutes");
+	votes = document.getElementById("votes");
 
-  // Reset time to 30 minutes.
-  overtime.timeMeasure = Overtime.TimeMeasure.MINUTES;
-  overtime.time = 30;
-  overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
-  overtime.shortenBy(1);
-  overtime.rewind();
-  displayTime(overtime);
+	// Make sure that all elements are present.
+	if(container && minutes && seconds && votes) {
 
-  // Update the time in the two input fields.
-  overtime.addEventListener("update", displayTime);
+		// Adjust the size of the canvas and add it to the page.
+		resize();
+		window.addEventListener("resize", resize);
+		container.appendChild(overtime.canvas);
 
-  overtime.addEventListener("elapsed", function()
-  {
-   enableTimeControls();
+		// Reset time to 30 minutes.
+		overtime.timeMeasure = Overtime.TimeMeasure.MINUTES;
+		overtime.time = 30;
+		overtime.timeMeasure = Overtime.TimeMeasure.SECONDS;
+		overtime.shortenBy(1);
+		overtime.rewind();
+		displayTime(overtime);
 
-   // Implement fancy finish effect here maybe.
-   window.alert("Die Zeit ist um!");
-  });
+		// Update the time in the two input fields.
+		overtime.addEventListener("update", displayTime);
 
-  document.getElementById("stop").addEventListener("click", function()
-  {
-   overtime.stop();
-   enableTimeControls();
-  });
+		overtime.addEventListener("elapsed", function() {
 
-  document.getElementById("start").addEventListener("click", function()
-  {
-   if(disableTimeControls())
-   {
-    copyTime();
-   }
+			enableTimeControls();
 
-   overtime.start();
-  });
+			// Implement fancy finish effect here maybe.
+			window.alert("Die Zeit ist um!");
 
-  // Show the current time (persists over multiple sessions).
-  displayTime(overtime);
-  enableTimeControls();
+		});
 
-  // Try to request the current vote count.
-  if(XMLHttpRequest !== undefined)
-  {
-   xhr = new XMLHttpRequest();
-   xhr.addEventListener("readystatechange", handleResponse);
-   xhr.addEventListener("timeout", function() {});
-   intervalId = setInterval(requestVoteCount, timeout);
-  }
- }
+		document.getElementById("stop").addEventListener("click", function() {
 
- // Clean up.
- window.removeEventListener("load", init);
+			overtime.stop();
+			enableTimeControls();
+
+		});
+
+		document.getElementById("start").addEventListener("click", function() {
+
+			if(disableTimeControls()) {
+
+				copyTime();
+
+			}
+
+			overtime.start();
+
+		});
+
+		// Show the current time (persists over multiple sessions).
+		displayTime(overtime);
+		enableTimeControls();
+
+		// Try to request the current vote count.
+		if(XMLHttpRequest !== undefined) {
+
+			xhr = new XMLHttpRequest();
+			xhr.addEventListener("readystatechange", handleResponse);
+			xhr.addEventListener("timeout", function() {});
+			intervalId = setInterval(requestVoteCount, timeout);
+
+		}
+
+	}
+
+	// Clean up.
+	window.removeEventListener("load", init);
+
 });

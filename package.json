@@ -1,48 +1,69 @@
 {
-  "name": "backtalk",
-  "description": "The front end of the FHB lecture evaluation app project.",
-  "keywords": [
-   "campus",
-   "lecture",
-   "evaluation",
-   "eval",
-   "fhb",
-   "university",
-   "brandenburg"
-  ],
-  "version": "0.0.0",
-  "private": true,
-  "homepage": "https://github.com/vanruesc/backtalk",
-  "author": {
-    "name": "Raoul van Rueschen",
-    "email": "vanruesc@fh-brandenburg.de"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/vanruesc/backtalk.git"
-  },
-  "bugs": {
-    "url": "https://github.com/vanruesc/backtalk/issues"
-  },
-  "license": "Zlib",
-  "main": "src/backtalk",
-  "scripts": {
-    "test": "grunt test"
-  },
-  "engines": {
-    "node": ">= 0.8.0"
-  },
-  "dependencies": {
-    "overtime": "x.x.x"
-  },
-  "devDependencies": {
-    "grunt": "0.4.x",
-    "grunt-browserify": "3.x.x",
-    "grunt-contrib-clean": "0.x.x",
-    "grunt-contrib-jasmine": "0.x.x",
-    "grunt-contrib-jshint": "0.11.x",
-    "grunt-contrib-uglify": "0.9.x",
-    "grunt-contrib-watch": "0.6.x",
-    "grunt-contrib-yuidoc": "0.8.x"
-  }
+	"name": "backtalk",
+	"version": "0.0.1",
+	"private": true,
+	"description": "The front end of the FHB lecture evaluation app project.",
+	"homepage": "https://github.com/vanruesc/backtalk",
+	"main": "build/backtalk",
+	"jsnext:main": "src/backtalk",
+	"license": "Zlib",
+
+	"keywords": [
+		"campus",
+		"lecture",
+		"evaluation",
+		"eval",
+		"fhb",
+		"university",
+		"fachhochschule",
+		"brandenburg"
+	],
+
+	"author": {
+		"name": "Raoul van Rueschen",
+		"email": "vanruesc@fh-brandenburg.de"
+	},
+
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/vanruesc/backtalk.git"
+	},
+
+	"bugs": {
+		"url": "https://github.com/vanruesc/backtalk/issues"
+	},
+
+	"scripts": {
+
+		"jshint:lib": "jshint src",
+		"jshint": "npm run jshint:lib",
+
+		"rollup": "rollup -f iife -n Backtalk -i src/backtalk.js -o build/backtalk.js",
+		"uglify": "uglifyjs build/backtalk.js -c -m -o build/backtalk.min.js",
+
+		"yuidoc": "yuidoc src -q -c yuidoc.json",
+
+		"prebuild": "npm run jshint",
+		"build": "npm run rollup && npm run uglify",
+		"postbuild": "node banner.js",
+		"pretest": "npm run build",
+		"test": "echo No tests specified."
+
+	},
+
+	"engines": {
+		"node": ">= 0.10.0"
+	},
+
+	"dependencies": {
+		"overtime": "x.x.x"
+	},
+
+	"devDependencies": {
+		"jshint": "2.x.x",
+		"prepend-file": "1.x.x",
+		"rollup": "0.19.x",
+		"uglify-js": "2.x.x",
+		"yuidocjs": "0.x.x"
+	}
 }

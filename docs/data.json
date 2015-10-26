@@ -1,6 +1,6 @@
 {
     "project": {
-        "name": "backtalk",
+        "name": "Backtalk API",
         "description": "The front end of the FHB lecture evaluation app project.",
         "version": "0.0.1",
         "url": "https://github.com/vanruesc/backtalk"
@@ -27,15 +27,16 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\backtalk.js",
-            "line": 3,
+            "line": 1,
             "description": "A compilation of static functions.\nThis system uses Overtime to display a\ntime limit on the evaluation page.",
             "static": 1
         }
     },
+    "elements": {},
     "classitems": [
         {
             "file": "src\\backtalk.js",
-            "line": 14,
+            "line": 12,
             "description": "The Overtime instance.",
             "itemtype": "property",
             "name": "overtime",
@@ -47,7 +48,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 25,
+            "line": 23,
             "description": "The main DOM container.",
             "itemtype": "property",
             "name": "container",
@@ -59,7 +60,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 36,
+            "line": 34,
             "description": "The DOM container for displaying the minutes.",
             "itemtype": "property",
             "name": "minutes",
@@ -71,7 +72,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 47,
+            "line": 45,
             "description": "The DOM container for displaying the seconds.",
             "itemtype": "property",
             "name": "seconds",
@@ -83,7 +84,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 58,
+            "line": 56,
             "description": "The interval id.",
             "itemtype": "property",
             "name": "intervalId",
@@ -95,7 +96,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 69,
+            "line": 67,
             "description": "The DOM container for displaying the votes.",
             "itemtype": "property",
             "name": "votes",
@@ -107,7 +108,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 80,
+            "line": 78,
             "description": "The ajax object.",
             "itemtype": "property",
             "name": "xhr",
@@ -119,7 +120,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 91,
+            "line": 89,
             "description": "The request timeout in ms.",
             "itemtype": "property",
             "name": "timeout",
@@ -132,7 +133,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 103,
+            "line": 101,
             "description": "The current vote count.",
             "itemtype": "property",
             "name": "voteCount",
@@ -144,7 +145,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 114,
+            "line": 112,
             "description": "Dynamically resize the canvas.",
             "itemtype": "method",
             "name": "resize",
@@ -155,7 +156,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 130,
+            "line": 129,
             "description": "Sets the time based on the values in the input fields.",
             "itemtype": "method",
             "name": "copyTime",
@@ -166,7 +167,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 175,
+            "line": 176,
             "description": "Displays the time as digits.",
             "itemtype": "method",
             "name": "displayTime",
@@ -184,7 +185,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 196,
+            "line": 198,
             "description": "Adds event listeners to the time controls number inputs.",
             "itemtype": "method",
             "name": "enableTimeControls",
@@ -195,7 +196,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 210,
+            "line": 213,
             "description": "Removes event listeners from the time controls number inputs.",
             "itemtype": "method",
             "name": "disableTimeControls",
@@ -210,7 +211,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 232,
+            "line": 237,
             "description": "Handle xhr responses.",
             "itemtype": "method",
             "name": "handleResponse",
@@ -221,7 +222,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 271,
+            "line": 281,
             "description": "Request the current vote count.",
             "itemtype": "method",
             "name": "requestVoteCount",
@@ -232,7 +233,7 @@
         },
         {
             "file": "src\\backtalk.js",
-            "line": 286,
+            "line": 297,
             "description": "The Setup.",
             "itemtype": "method",
             "name": "init",
