@@ -1,7 +1,7 @@
 /**
- * backtalk v0.0.1 build Oct 26 2015
+ * backtalk v0.0.2 build Nov 06 2015
  * https://github.com/vanruesc/backtalk
- * Copyright 2015 Raoul van Rueschen, Zlib
+ * Copyright 2015 Raoul van Rüschen, Zlib
  */
 (function () { 'use strict';
 

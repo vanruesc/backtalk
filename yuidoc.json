@@ -1,7 +1,7 @@
 {
 	"name": "Backtalk API",
 	"description": "The front end of the FHB lecture evaluation app project.",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"url": "https://github.com/vanruesc/backtalk",
 	"options": {
 		"outdir": "docs"

@@ -1,6 +1,6 @@
 {
 	"name": "backtalk",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"private": true,
 	"description": "The front end of the FHB lecture evaluation app project.",
 	"homepage": "https://github.com/vanruesc/backtalk",
@@ -38,7 +38,7 @@
 		"jshint:lib": "jshint src",
 		"jshint": "npm run jshint:lib",
 
-		"rollup": "rollup -f iife -n Backtalk -i src/backtalk.js -o build/backtalk.js",
+		"rollup": "node build",
 		"uglify": "uglifyjs build/backtalk.js -c -m -o build/backtalk.min.js",
 
 		"yuidoc": "yuidoc src -q -c yuidoc.json",
@@ -61,8 +61,11 @@
 
 	"devDependencies": {
 		"jshint": "2.x.x",
+		"minimist": "1.x.x",
 		"prepend-file": "1.x.x",
-		"rollup": "0.19.x",
+		"rollup": "0.x.x",
+		"rollup-plugin-commonjs": "x.x.x",
+		"rollup-plugin-npm": "x.x.x",
 		"uglify-js": "2.x.x",
 		"yuidocjs": "0.x.x"
 	}
